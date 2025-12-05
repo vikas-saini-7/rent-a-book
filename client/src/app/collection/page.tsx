@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import Header from "@/components/common/Header";
 import Footer from "@/components/common/Footer";
 import {
@@ -6,7 +7,7 @@ import {
   TopFilters,
   BookGrid,
   Pagination,
-} from "../components/collection";
+} from "../../components/collection";
 
 export default function CollectionPage() {
   return (
@@ -23,7 +24,13 @@ export default function CollectionPage() {
         </div>
 
         {/* Top Filters */}
-        <TopFilters />
+        <Suspense
+          fallback={
+            <div className="h-32 animate-pulse bg-bg-card rounded-lg" />
+          }
+        >
+          <TopFilters />
+        </Suspense>
 
         {/* Main Content */}
         <div className="flex flex-col md:flex-row gap-8">

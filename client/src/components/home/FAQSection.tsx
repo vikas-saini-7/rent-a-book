@@ -1,4 +1,5 @@
 import React from "react";
+import { IconChevronDown } from "@tabler/icons-react";
 import SectionTitle from "./SectionTitle";
 
 const faqs = [
@@ -36,9 +37,10 @@ const FAQSection = () => {
           >
             <summary className="font-medium text-text-primary cursor-pointer list-none flex justify-between items-center">
               {faq.question}
-              <span className="text-text-muted group-open:rotate-180 transition-transform">
-                ▼
-              </span>
+              <IconChevronDown
+                size={18}
+                className="text-text-muted group-open:rotate-180 transition-transform"
+              />
             </summary>
             <p className="text-text-secondary mt-3 text-sm">{faq.answer}</p>
           </details>
