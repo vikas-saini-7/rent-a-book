@@ -108,9 +108,9 @@ const FAQPage = () => {
                     {faq.question}
                   </span>
                   {openIndex === index ? (
-                    <IconChevronUp className="w-5 h-5 text-primary flex-shrink-0" />
+                    <IconChevronUp className="w-5 h-5 text-primary shrink-0" />
                   ) : (
-                    <IconChevronDown className="w-5 h-5 text-text-muted flex-shrink-0" />
+                    <IconChevronDown className="w-5 h-5 text-text-muted shrink-0" />
                   )}
                 </button>
                 {openIndex === index && (
