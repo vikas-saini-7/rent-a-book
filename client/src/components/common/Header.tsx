@@ -89,7 +89,7 @@ const Header = () => {
     setSearchQuery("");
   };
 
-  const isLoggedIn = true; // Toggle this to switch between logged in/out states
+  const isLoggedIn = false; // Toggle this to switch between logged in/out states
 
   return (
     <header className="w-full border-b border-border bg-bg-card">
