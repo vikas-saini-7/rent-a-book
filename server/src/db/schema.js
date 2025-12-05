@@ -128,6 +128,10 @@ const authors = pgTable("authors", {
 
 const libraries = pgTable("libraries", {
   id: serial("id").primaryKey(),
+  // Login credentials
+  email: varchar("email", { length: 255 }).notNull().unique(),
+  password: text("password").notNull(),
+  // Library details
   name: varchar("name", { length: 255 }).notNull(),
   slug: varchar("slug", { length: 255 }).notNull().unique(),
   description: text("description"),
@@ -141,7 +145,6 @@ const libraries = pgTable("libraries", {
   country: varchar("country", { length: 100 }).default("India"),
   // Contact
   phone: varchar("phone", { length: 20 }),
-  email: varchar("email", { length: 255 }),
   // Operating hours (can be JSON or separate fields)
   operatingHours: text("operating_hours"), // JSON string
   isActive: boolean("is_active").default(true),
