@@ -1,26 +1,31 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { IconChevronDown } from "@tabler/icons-react";
+import axios from "axios";
 
-const genres = [
-  "Fiction",
-  "Non-Fiction",
-  "Mystery",
-  "Romance",
-  "Science Fiction",
-  "Fantasy",
-  "Biography",
-  "Self-Help",
-  "History",
-  "Children",
-];
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
-const languages = ["English", "Hindi", "Tamil", "Telugu", "Bengali", "Marathi"];
+interface FilterOptions {
+  genres: Array<{ id: string; name: string; slug: string }>;
+  languages: Array<{ value: string; count: number }>;
+  conditions: Array<{ value: string; count: number }>;
+  priceRange: { min: number; max: number };
+  rentalPeriods: Array<{ value: string; label: string }>;
+}
 
-const conditions = ["Like New", "Good", "Fair"];
-
-const rentalPeriods = ["1 Week", "2 Weeks", "1 Month", "3 Months"];
+const defaultFilterOptions: FilterOptions = {
+  genres: [],
+  languages: [],
+  conditions: [],
+  priceRange: { min: 0, max: 100 },
+  rentalPeriods: [
+    { value: "1_week", label: "1 Week" },
+    { value: "2_weeks", label: "2 Weeks" },
+    { value: "1_month", label: "1 Month" },
+    { value: "3_months", label: "3 Months" },
+  ],
+};
 
 interface FilterSectionProps {
   title: string;
@@ -54,11 +59,71 @@ const FilterSection = ({
   );
 };
 
-const FiltersSidebar = () => {
+interface FiltersSidebarProps {
+  onFilterChange: (filters: {
+    genres: string[];
+    languages: string[];
+    conditions: string[];
+    priceRange: [number, number];
+  }) => void;
+  loading?: boolean;
+}
+
+const FiltersSidebar = ({
+  onFilterChange,
+  loading = false,
+}: FiltersSidebarProps) => {
   const [priceRange, setPriceRange] = useState([0, 100]);
   const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
   const [selectedLanguages, setSelectedLanguages] = useState<string[]>([]);
   const [selectedConditions, setSelectedConditions] = useState<string[]>([]);
+  const [filterOptions, setFilterOptions] =
+    useState<FilterOptions>(defaultFilterOptions);
+  const [isLoadingOptions, setIsLoadingOptions] = useState(false);
+
+  // Fetch filter options from API
+  useEffect(() => {
+    const fetchFilterOptions = async () => {
+      try {
+        setIsLoadingOptions(true);
+        const response = await axios.get(
+          `${API_URL}/api/books/filters-options`
+        );
+        if (response.data.success) {
+          setFilterOptions(response.data.data);
+          // Update price range with API data
+          if (response.data.data.priceRange) {
+            setPriceRange([
+              response.data.data.priceRange.min,
+              response.data.data.priceRange.max,
+            ]);
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching filter options:", error);
+      } finally {
+        setIsLoadingOptions(false);
+      }
+    };
+
+    fetchFilterOptions();
+  }, []);
+
+  // Notify parent of filter changes
+  useEffect(() => {
+    onFilterChange({
+      genres: selectedGenres,
+      languages: selectedLanguages,
+      conditions: selectedConditions,
+      priceRange: [priceRange[0], priceRange[1]],
+    });
+  }, [
+    selectedGenres,
+    selectedLanguages,
+    selectedConditions,
+    priceRange,
+    onFilterChange,
+  ]);
 
   const toggleFilter = (
     value: string,
@@ -123,46 +188,57 @@ const FiltersSidebar = () => {
       {/* Genre */}
       <FilterSection title="Genre">
         <div className="space-y-2 max-h-48 overflow-y-auto">
-          {genres.map((genre) => (
-            <label
-              key={genre}
-              className="flex items-center gap-2 cursor-pointer"
-            >
-              <input
-                type="checkbox"
-                checked={selectedGenres.includes(genre)}
-                onChange={() =>
-                  toggleFilter(genre, selectedGenres, setSelectedGenres)
-                }
-                className="w-4 h-4 accent-primary"
-              />
-              <span className="text-sm text-text-secondary">{genre}</span>
-            </label>
-          ))}
+          {isLoadingOptions ? (
+            <div className="text-sm text-text-muted">Loading...</div>
+          ) : (
+            filterOptions.genres.map((genre) => (
+              <label
+                key={genre.id}
+                className="flex items-center gap-2 cursor-pointer"
+              >
+                <input
+                  type="checkbox"
+                  checked={selectedGenres.includes(genre.slug)}
+                  onChange={() =>
+                    toggleFilter(genre.slug, selectedGenres, setSelectedGenres)
+                  }
+                  className="w-4 h-4 accent-primary"
+                />
+                <span className="text-sm text-text-secondary">
+                  {genre.name}
+                </span>
+              </label>
+            ))
+          )}
         </div>
       </FilterSection>
 
       {/* Language */}
       <FilterSection title="Language">
         <div className="space-y-2">
-          {languages.map((language) => (
+          {filterOptions.languages.map((language) => (
             <label
-              key={language}
+              key={language.value}
               className="flex items-center gap-2 cursor-pointer"
             >
               <input
                 type="checkbox"
-                checked={selectedLanguages.includes(language)}
+                checked={selectedLanguages.includes(language.value)}
                 onChange={() =>
                   toggleFilter(
-                    language,
+                    language.value,
                     selectedLanguages,
                     setSelectedLanguages
                   )
                 }
                 className="w-4 h-4 accent-primary"
               />
-              <span className="text-sm text-text-secondary">{language}</span>
+              <span className="text-sm text-text-secondary">
+                {language.value}
+              </span>
+              <span className="text-xs text-text-muted">
+                ({language.count})
+              </span>
             </label>
           ))}
         </div>
@@ -171,24 +247,29 @@ const FiltersSidebar = () => {
       {/* Condition */}
       <FilterSection title="Book Condition">
         <div className="space-y-2">
-          {conditions.map((condition) => (
+          {filterOptions.conditions.map((condition) => (
             <label
-              key={condition}
+              key={condition.value}
               className="flex items-center gap-2 cursor-pointer"
             >
               <input
                 type="checkbox"
-                checked={selectedConditions.includes(condition)}
+                checked={selectedConditions.includes(condition.value)}
                 onChange={() =>
                   toggleFilter(
-                    condition,
+                    condition.value,
                     selectedConditions,
                     setSelectedConditions
                   )
                 }
                 className="w-4 h-4 accent-primary"
               />
-              <span className="text-sm text-text-secondary">{condition}</span>
+              <span className="text-sm text-text-secondary capitalize">
+                {condition.value.replace(/_/g, " ")}
+              </span>
+              <span className="text-xs text-text-muted">
+                ({condition.count})
+              </span>
             </label>
           ))}
         </div>
@@ -197,9 +278,9 @@ const FiltersSidebar = () => {
       {/* Rental Period */}
       <FilterSection title="Rental Period" defaultOpen={false}>
         <div className="space-y-2">
-          {rentalPeriods.map((period) => (
+          {filterOptions.rentalPeriods.map((period) => (
             <label
-              key={period}
+              key={period.value}
               className="flex items-center gap-2 cursor-pointer"
             >
               <input
@@ -207,7 +288,9 @@ const FiltersSidebar = () => {
                 name="rental-period"
                 className="w-4 h-4 accent-primary"
               />
-              <span className="text-sm text-text-secondary">{period}</span>
+              <span className="text-sm text-text-secondary">
+                {period.label}
+              </span>
             </label>
           ))}
         </div>

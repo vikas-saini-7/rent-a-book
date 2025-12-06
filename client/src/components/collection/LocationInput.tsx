@@ -1,17 +1,54 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { IconMapPin, IconCurrentLocation } from "@tabler/icons-react";
 
-const LocationInput = () => {
-  const [location, setLocation] = useState("");
+interface LocationInputProps {
+  onLocationChange?: (location: string) => void;
+  initialLocation?: string;
+}
+
+const LocationInput = ({
+  onLocationChange,
+  initialLocation = "",
+}: LocationInputProps) => {
+  const [location, setLocation] = useState(initialLocation);
+
+  useEffect(() => {
+    setLocation(initialLocation);
+  }, [initialLocation]);
+
+  const handleLocationChange = (newLocation: string) => {
+    setLocation(newLocation);
+    onLocationChange?.(newLocation);
+  };
 
   const handleGetCurrentLocation = () => {
     // In a real app, this would use the Geolocation API
     setLocation("Detecting location...");
-    setTimeout(() => {
-      setLocation("New Delhi, India");
-    }, 1000);
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          // For now, we'll just use a placeholder
+          // In production, you'd use a geocoding service
+          setLocation("Current Location");
+          onLocationChange?.("current");
+        },
+        (error) => {
+          console.error("Error getting location:", error);
+          setTimeout(() => {
+            setLocation("New Delhi, India");
+            onLocationChange?.("New Delhi");
+          }, 1000);
+        }
+      );
+    } else {
+      setTimeout(() => {
+        setLocation("New Delhi, India");
+        onLocationChange?.("New Delhi");
+      }, 1000);
+    }
   };
 
   return (
@@ -26,7 +63,7 @@ const LocationInput = () => {
             type="text"
             placeholder="Enter your location or pincode"
             value={location}
-            onChange={(e) => setLocation(e.target.value)}
+            onChange={(e) => handleLocationChange(e.target.value)}
             className="w-full pl-10 pr-4 py-3 bg-bg-main border border-border rounded-md text-text-primary placeholder:text-text-muted focus:outline-none focus:border-primary"
           />
         </div>

@@ -1,12 +1,21 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import { IconChevronLeft, IconChevronRight } from "@tabler/icons-react";
 
-const Pagination = () => {
-  const [currentPage, setCurrentPage] = useState(1);
-  const totalPages = 21;
+interface PaginationProps {
+  currentPage: number;
+  totalPages: number;
+  totalBooks?: number;
+  onPageChange: (page: number) => void;
+}
 
+const Pagination = ({
+  currentPage,
+  totalPages,
+  totalBooks,
+  onPageChange,
+}: PaginationProps) => {
   const getPageNumbers = () => {
     const pages: (number | string)[] = [];
 
@@ -44,7 +53,7 @@ const Pagination = () => {
 
   const goToPage = (page: number) => {
     if (page >= 1 && page <= totalPages) {
-      setCurrentPage(page);
+      onPageChange(page);
     }
   };
 

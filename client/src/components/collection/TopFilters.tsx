@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
 import {
   IconSearch,
   IconAdjustmentsHorizontal,
@@ -10,51 +9,54 @@ import {
 
 const sortOptions = [
   { value: "relevance", label: "Relevance" },
-  { value: "price-low", label: "Price: Low to High" },
-  { value: "price-high", label: "Price: High to Low" },
-  { value: "newest", label: "Newest First" },
-  { value: "rating", label: "Highest Rated" },
+  { value: "price_low", label: "Price: Low to High" },
+  { value: "price_high", label: "Price: High to Low" },
+  { value: "new_arrivals", label: "Newest First" },
+  { value: "top_rated", label: "Highest Rated" },
   { value: "distance", label: "Nearest First" },
 ];
 
 const quickFilters = [
-  "Available Now",
-  "Free Delivery",
-  "Top Rated",
-  "New Arrivals",
+  { value: "available_now", label: "Available Now" },
+  { value: "free_delivery", label: "Free Delivery" },
+  { value: "top_rated", label: "Top Rated" },
+  { value: "new_arrivals", label: "New Arrivals" },
 ];
 
-const TopFilters = () => {
-  const searchParams = useSearchParams();
-  const router = useRouter();
-  const urlSearch = searchParams.get("search") || "";
+interface TopFiltersProps {
+  onSearch?: (query: string) => void;
+  onSortChange?: (sortBy: string) => void;
+  totalBooks?: number;
+  currentSearch?: string;
+}
 
-  const [searchQuery, setSearchQuery] = useState(urlSearch);
+const TopFilters = ({
+  onSearch,
+  onSortChange,
+  totalBooks = 0,
+  currentSearch = "",
+}: TopFiltersProps) => {
+  const [searchQuery, setSearchQuery] = useState(currentSearch);
   const [sortBy, setSortBy] = useState("relevance");
   const [activeQuickFilters, setActiveQuickFilters] = useState<string[]>([]);
 
-  // Sync search query with URL when it changes
   useEffect(() => {
-    const search = searchParams.get("search") || "";
-    setSearchQuery(search);
-  }, [searchParams]);
+    setSearchQuery(currentSearch);
+  }, [currentSearch]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    const params = new URLSearchParams(searchParams.toString());
-    if (searchQuery.trim()) {
-      params.set("search", searchQuery.trim());
-    } else {
-      params.delete("search");
-    }
-    router.push(`/collection?${params.toString()}`);
+    onSearch?.(searchQuery.trim());
   };
 
   const clearSearch = () => {
     setSearchQuery("");
-    const params = new URLSearchParams(searchParams.toString());
-    params.delete("search");
-    router.push(`/collection?${params.toString()}`);
+    onSearch?.("");
+  };
+
+  const handleSortChange = (newSort: string) => {
+    setSortBy(newSort);
+    onSortChange?.(newSort);
   };
 
   const toggleQuickFilter = (filter: string) => {
@@ -100,7 +102,7 @@ const TopFilters = () => {
           </span>
           <select
             value={sortBy}
-            onChange={(e) => setSortBy(e.target.value)}
+            onChange={(e) => handleSortChange(e.target.value)}
             className="px-3 py-2.5 bg-bg-card border border-border rounded-md text-text-primary focus:outline-none focus:border-primary"
           >
             {sortOptions.map((option) => (
@@ -119,11 +121,11 @@ const TopFilters = () => {
       </div>
 
       {/* Active Search Tag */}
-      {urlSearch && (
+      {currentSearch && (
         <div className="flex items-center gap-2">
           <span className="text-sm text-text-muted">Searching for:</span>
           <span className="inline-flex items-center gap-1 px-3 py-1 bg-primary-light text-primary rounded-full text-sm">
-            {urlSearch}
+            {currentSearch}
             <button onClick={clearSearch} className="hover:text-primary-hover">
               <IconX size={14} />
             </button>
@@ -134,18 +136,18 @@ const TopFilters = () => {
       {/* Quick Filters */}
       <div className="flex flex-wrap gap-2">
         {quickFilters.map((filter) => {
-          const isActive = activeQuickFilters.includes(filter);
+          const isActive = activeQuickFilters.includes(filter.value);
           return (
             <button
-              key={filter}
-              onClick={() => toggleQuickFilter(filter)}
+              key={filter.value}
+              onClick={() => toggleQuickFilter(filter.value)}
               className={`flex items-center gap-1 px-3 py-1.5 rounded-full text-sm transition-colors ${
                 isActive
                   ? "bg-primary text-white"
                   : "bg-bg-card border border-border text-text-secondary hover:border-primary hover:text-primary"
               }`}
             >
-              {filter}
+              {filter.label}
               {isActive && <IconX size={14} />}
             </button>
           );
@@ -155,12 +157,17 @@ const TopFilters = () => {
       {/* Results Count */}
       <div className="flex items-center justify-between text-sm">
         <p className="text-text-secondary">
-          Showing <span className="font-medium text-text-primary">1-12</span> of{" "}
-          <span className="font-medium text-text-primary">248</span> books
-          {urlSearch && (
+          Showing{" "}
+          <span className="font-medium text-text-primary">
+            {Math.min(12, totalBooks)}
+          </span>{" "}
+          of <span className="font-medium text-text-primary">{totalBooks}</span>{" "}
+          books
+          {currentSearch && (
             <span>
               {" "}
-              for &quot;<span className="text-primary">{urlSearch}</span>&quot;
+              for &quot;<span className="text-primary">{currentSearch}</span>
+              &quot;
             </span>
           )}
         </p>
