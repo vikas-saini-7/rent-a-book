@@ -93,7 +93,7 @@ export default function ProfilePage() {
               </div>
               <div>
                 <p className="text-sm text-text-muted">Phone</p>
-                <p className="text-text-primary">-</p>
+                <p className="text-text-primary">{user?.phone || "-"}</p>
               </div>
             </div>
 
@@ -103,7 +103,7 @@ export default function ProfilePage() {
               </div>
               <div>
                 <p className="text-sm text-text-muted">Address</p>
-                <p className="text-text-primary">-</p>
+                <p className="text-text-primary">{false || "-"}</p>
               </div>
             </div>
           </div>
