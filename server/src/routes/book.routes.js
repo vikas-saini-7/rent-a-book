@@ -1,0 +1,29 @@
+const express = require("express");
+const router = express.Router();
+const bookController = require("../controllers/book.controller.js");
+const filterController = require("../controllers/filter.controller.js");
+
+// FILTER ROUTES
+router.get("/filters-options", filterController.getFilterOptions);
+router.get("/genres-list", filterController.getAllGenres);
+
+// WEB ROUTES
+
+// Route to get all books with filters, search, sorting
+router.get("/", bookController.getAllBooks);
+
+// Route to get featured books
+router.get("/featured", bookController.getFeaturedBooks);
+
+// Route to get most rented books
+router.get("/most-rented", bookController.getMostRentedBooks);
+
+// Route to get books by genre
+router.get("/genre/:slug", bookController.getBooksByGenre);
+
+// Route to get a single book by ID
+router.get("/:id", bookController.getBookById);
+
+// LIBRARY ROUTES
+
+module.exports = router;
