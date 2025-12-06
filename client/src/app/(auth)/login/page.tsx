@@ -2,12 +2,13 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { IconEye, IconEyeOff, IconBook } from "@tabler/icons-react";
 import { useAuth } from "@/contexts/AuthContext";
 
 export default function LoginPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { login } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
@@ -30,7 +31,8 @@ export default function LoginPage() {
 
     try {
       await login(formData.email, formData.password);
-      router.push("/");
+      const redirect = searchParams.get("redirect") || "/";
+      router.push(redirect);
     } catch (err: any) {
       setError(err.message || "Login failed. Please try again.");
     } finally {

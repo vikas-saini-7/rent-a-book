@@ -2,12 +2,13 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { IconEye, IconEyeOff, IconBook } from "@tabler/icons-react";
 import { useAuth } from "@/contexts/AuthContext";
 
 export default function SignupPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { signup } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -45,7 +46,8 @@ export default function SignupPage() {
 
     try {
       await signup(formData.name, formData.email, formData.password);
-      router.push("/");
+      const redirect = searchParams.get("redirect") || "/";
+      router.push(redirect);
     } catch (err: any) {
       setError(err.message || "Signup failed. Please try again.");
     } finally {
