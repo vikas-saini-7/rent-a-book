@@ -13,6 +13,7 @@ import {
   IconChevronDown,
   IconX,
   IconArrowRight,
+  IconWallet,
 } from "@tabler/icons-react";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -345,6 +346,14 @@ const Header = () => {
                     >
                       <IconUser size={18} />
                       <span>My Profile</span>
+                    </Link>
+                    <Link
+                      href="/deposit"
+                      className="flex items-center gap-3 px-4 py-2 text-text-secondary hover:bg-bg-main hover:text-primary transition-colors"
+                      onClick={() => setIsProfileOpen(false)}
+                    >
+                      <IconWallet size={18} />
+                      <span>Deposit</span>
                     </Link>
                     <Link
                       href="/rentals"
