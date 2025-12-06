@@ -12,7 +12,15 @@ interface User {
   id: string;
   email: string;
   fullName: string;
-  avatarUrl?: string;
+  avatarUrl?: string | null;
+  depositBalance?: string;
+  lockedBalance?: string;
+  phone?: string;
+  isPremium?: boolean;
+  isVerified?: boolean;
+  isActive?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 interface AuthContextType {
@@ -40,6 +48,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         const userData = sessionStorage.getItem("user");
         if (userData) {
           setUser(JSON.parse(userData));
+          console.log(JSON.parse(userData));
         }
       } catch (error) {
         console.error("Auth check failed:", error);

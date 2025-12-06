@@ -9,15 +9,24 @@ import {
   IconInfoCircle,
   IconCash,
 } from "@tabler/icons-react";
-import { useState } from "react";
+import { useState, useMemo } from "react";
+import { useAuth } from "@/contexts/AuthContext";
 
 const DepositPage = () => {
+  const { user } = useAuth();
   const [isWithdrawOpen, setIsWithdrawOpen] = useState(false);
   const [withdrawAmount, setWithdrawAmount] = useState(0);
-  // Placeholder data; replace with real API data when available
-  const totalDeposit = 1500;
-  const lockedAmount = 600; // locked in active rentals
-  const availableAmount = totalDeposit - lockedAmount;
+
+  const { totalDeposit, lockedAmount, availableAmount } = useMemo(() => {
+    const deposit = user?.depositBalance ? parseFloat(user.depositBalance) : 0;
+    const locked = user?.lockedBalance ? parseFloat(user.lockedBalance) : 0;
+    const available = Math.max(0, deposit - locked);
+    return {
+      totalDeposit: deposit,
+      lockedAmount: locked,
+      availableAmount: available,
+    };
+  }, [user]);
 
   const activeLocks = [
     {

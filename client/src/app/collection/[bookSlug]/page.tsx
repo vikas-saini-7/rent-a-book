@@ -1,10 +1,11 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useParams, useRouter } from "next/navigation";
 import axios from "axios";
 import Header from "@/components/common/Header";
 import Footer from "@/components/common/Footer";
+import { useAuth } from "@/contexts/AuthContext";
 import {
   IconArrowLeft,
   IconStar,
@@ -14,6 +15,8 @@ import {
   IconPhone,
   IconMail,
   IconClock,
+  IconWallet,
+  IconAlertCircle,
 } from "@tabler/icons-react";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
@@ -70,11 +73,33 @@ export default function BookDetailPage() {
   const params = useParams();
   const router = useRouter();
   const bookSlug = params.bookSlug as string;
+  const { user, isAuthenticated } = useAuth();
 
   const [book, setBook] = useState<BookDetails | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [liked, setLiked] = useState(false);
+
+  const { availableDeposit, hasEnoughDeposit, depositShortfall } =
+    useMemo(() => {
+      if (!user || !book) {
+        return {
+          availableDeposit: 0,
+          hasEnoughDeposit: false,
+          depositShortfall: 0,
+        };
+      }
+      const deposit = user.depositBalance ? parseFloat(user.depositBalance) : 0;
+      const locked = user.lockedBalance ? parseFloat(user.lockedBalance) : 0;
+      const available = Math.max(0, deposit - locked);
+      const required = book.depositAmount || 0;
+      const shortfall = Math.max(0, required - available);
+      return {
+        availableDeposit: available,
+        hasEnoughDeposit: available >= required,
+        depositShortfall: shortfall,
+      };
+    }, [user, book]);
 
   useEffect(() => {
     const fetchBookDetails = async () => {
@@ -310,6 +335,50 @@ export default function BookDetailPage() {
               </div>
             </div>
 
+            {/* Deposit Status & Actions */}
+            {isAuthenticated && (
+              <div className="space-y-3 mt-6">
+                <div className="text-sm text-text-secondary">
+                  <span className="text-text-muted">
+                    Your Available Deposit:{" "}
+                  </span>
+                  <span
+                    className={`font-semibold ${
+                      hasEnoughDeposit ? "text-emerald-600" : "text-red-600"
+                    }`}
+                  >
+                    ₹{availableDeposit.toFixed(2)}
+                  </span>
+                  <span className="text-text-muted"> </span>
+                </div>
+
+                {hasEnoughDeposit ? (
+                  <></>
+                ) : (
+                  <div className="space-y-2">
+                    <p className="text-sm text-red-600">
+                      Add ₹{depositShortfall.toFixed(2)} more to rent this book.{" "}
+                      <button
+                        onClick={() => router.push("/deposit")}
+                        className="underline hover:text-red-700 font-medium"
+                      >
+                        Add deposit
+                      </button>
+                    </p>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {!isAuthenticated && (
+              <button
+                onClick={() => router.push("/login")}
+                className="w-full px-6 py-3 bg-primary hover:bg-primary-hover text-white rounded-lg font-semibold transition-colors mt-6"
+              >
+                Login to Rent
+              </button>
+            )}
+
             {/* Nearest Library Section */}
             {book.libraries && book.libraries.length > 0 ? (
               <div className="mt-8 pt-8 border-t border-border">
@@ -399,17 +468,22 @@ export default function BookDetailPage() {
                     </div>
 
                     {/* Rent Button */}
-                    <button className="w-full px-6 py-3 bg-linear-to-r from-primary to-primary-hover text-white rounded-lg font-semibold hover:shadow-lg transition-all transform hover:scale-105 active:scale-95">
-                      Start Renting • ₹{book.rentalPricePerWeek}/week
-                    </button>
+                    {isAuthenticated && hasEnoughDeposit && (
+                      <button className="w-full px-6 py-3 bg-primary hover:bg-primary-hover text-white rounded-lg font-semibold transition-colors">
+                        Start Renting • ₹{book.rentalPricePerWeek}/week
+                      </button>
+                    )}
 
-                    {/* Additional Info */}
-                    <p className="text-xs text-text-muted text-center pt-2">
-                      Deposit required:{" "}
-                      <span className="font-semibold text-text-secondary">
-                        ₹{book.depositAmount}
-                      </span>
-                    </p>
+                    {!isAuthenticated && (
+                      <div className="pt-2">
+                        <p className="text-xs text-text-muted text-center">
+                          Deposit required:{" "}
+                          <span className="font-semibold text-text-secondary">
+                            ₹{book.depositAmount}
+                          </span>
+                        </p>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
