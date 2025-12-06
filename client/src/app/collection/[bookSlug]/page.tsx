@@ -222,18 +222,20 @@ export default function BookDetailPage() {
               </div>
 
               {/* Quick Info */}
-              <div className="bg-bg-card border border-border rounded-lg p-4 space-y-2">
-                <div>
-                  <p className="text-xs text-text-muted mb-1">Language</p>
-                  <p className="text-sm text-text-primary font-medium">
-                    {book.language}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-xs text-text-muted mb-1">Pages</p>
-                  <p className="text-sm text-text-primary font-medium">
-                    {book.totalPages}
-                  </p>
+              <div className="bg-bg-card border border-border rounded-lg p-4">
+                <div className="flex gap-4">
+                  <div className="flex-1">
+                    <p className="text-xs text-text-muted mb-1">Language</p>
+                    <p className="text-sm text-text-primary font-medium">
+                      {book.language}
+                    </p>
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-xs text-text-muted mb-1">Pages</p>
+                    <p className="text-sm text-text-primary font-medium">
+                      {book.totalPages}
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -301,7 +303,7 @@ export default function BookDetailPage() {
                 </p>
               </div>
               <div className="bg-bg-card border border-border rounded-lg p-4">
-                <p className="text-xs text-text-muted mb-1">Deposit</p>
+                <p className="text-xs text-text-muted mb-1">Deposit Required</p>
                 <p className="text-lg text-text-primary font-semibold">
                   ₹{book.depositAmount}
                 </p>
