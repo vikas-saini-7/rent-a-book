@@ -21,8 +21,8 @@ router.get("/most-rented", bookController.getMostRentedBooks);
 // Route to get books by genre
 router.get("/genre/:slug", bookController.getBooksByGenre);
 
-// Route to get a single book by ID
-router.get("/:id", bookController.getBookById);
+// Route to get a single book by SLUG (must be before /:id route)
+router.get("/:slug", bookController.getBookBySlug);
 
 // LIBRARY ROUTES
 

@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
+import Link from "next/link";
 import { IconHeart, IconStar } from "@tabler/icons-react";
 import axios from "axios";
 
@@ -19,6 +20,7 @@ interface Genre {
 
 interface Book {
   id: string;
+  slug?: string;
   title: string;
   author?: Author | string;
   authorName?: string;
@@ -53,6 +55,7 @@ const defaultBooks: Book[] = [];
 
 interface BookCardProps {
   id: string;
+  slug?: string;
   title: string;
   authorName?: string;
   author?: string | Author;
@@ -67,6 +70,8 @@ interface BookCardProps {
 }
 
 const BookCard = ({
+  id,
+  slug,
   title,
   authorName,
   author,
@@ -103,74 +108,80 @@ const BookCard = ({
     price || (rentalPricePerWeek ? `₹${rentalPricePerWeek}/week` : "N/A");
   const displayRating = rating || 4.5;
   const displayGenre = getGenreName();
+  const bookDetailUrl = slug ? `/collection/${slug}` : `#`;
+
   return (
-    <div className="bg-bg-card border border-border rounded-lg overflow-hidden hover:shadow-md transition-shadow group">
-      <div className="relative w-full h-48 bg-primary-light">
-        {/* Placeholder Image */}
-        <div className="w-full h-full flex items-center justify-center bg-linear-to-br from-primary-light to-primary-light/50">
-          {coverImage ? (
-            <img
-              src="https://klacey.com/wp-content/uploads/Book-cover-illustration-service-by-freelance-illustrator-Kati-Lacey.webp"
-              alt={title}
-              className="w-full h-full object-cover"
-            />
-          ) : (
-            <div className="text-center">
-              <div className="text-3xl text-primary/30">📚</div>
-              <p className="text-xs text-primary/20 mt-1">No Image</p>
+    <Link href={bookDetailUrl}>
+      <div className="bg-bg-card border border-border rounded-lg overflow-hidden hover:shadow-md transition-shadow group cursor-pointer h-full">
+        <div className="relative w-full h-48 bg-primary-light">
+          {/* Placeholder Image */}
+          <div className="w-full h-full flex items-center justify-center bg-linear-to-br from-primary-light to-primary-light/50">
+            {coverImage ? (
+              <img
+                src="https://klacey.com/wp-content/uploads/Book-cover-illustration-service-by-freelance-illustrator-Kati-Lacey.webp"
+                alt={title}
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <div className="text-center">
+                <div className="text-3xl text-primary/30">📚</div>
+                <p className="text-xs text-primary/20 mt-1">No Image</p>
+              </div>
+            )}
+          </div>
+          {/* Wishlist Button */}
+          <button className="absolute top-2 right-2 p-1.5 bg-white/80 rounded-full hover:bg-white transition-colors">
+            <IconHeart size={18} className="text-text-muted hover:text-error" />
+          </button>
+          {/* Availability Badge */}
+          {!available && (
+            <div className="absolute bottom-2 left-2 px-2 py-1 bg-text-primary/80 text-white text-xs rounded">
+              Currently Rented
             </div>
           )}
         </div>
-        {/* Wishlist Button */}
-        <button className="absolute top-2 right-2 p-1.5 bg-white/80 rounded-full hover:bg-white transition-colors">
-          <IconHeart size={18} className="text-text-muted hover:text-error" />
-        </button>
-        {/* Availability Badge */}
-        {!available && (
-          <div className="absolute bottom-2 left-2 px-2 py-1 bg-text-primary/80 text-white text-xs rounded">
-            Currently Rented
+
+        {/* Content */}
+        <div className="p-4">
+          <div className="flex items-start justify-between gap-2 mb-1">
+            <h3 className="font-semibold text-text-primary line-clamp-1">
+              {title}
+            </h3>
+            <div className="flex items-center gap-0.5 shrink-0">
+              <IconStar
+                size={14}
+                className="text-accent-secondary fill-accent-secondary"
+              />
+              <span className="text-sm text-text-secondary">
+                {displayRating}
+              </span>
+            </div>
           </div>
-        )}
-      </div>
+          <p className="text-text-muted text-sm mb-2">{displayAuthor}</p>
 
-      {/* Content */}
-      <div className="p-4">
-        <div className="flex items-start justify-between gap-2 mb-1">
-          <h3 className="font-semibold text-text-primary line-clamp-1">
-            {title}
-          </h3>
-          <div className="flex items-center gap-0.5 shrink-0">
-            <IconStar
-              size={14}
-              className="text-accent-secondary fill-accent-secondary"
-            />
-            <span className="text-sm text-text-secondary">{displayRating}</span>
+          <div className="flex items-center gap-2 mb-3">
+            <span className="px-2 py-0.5 bg-primary-light text-primary text-xs rounded">
+              {displayGenre}
+            </span>
+            <span className="text-xs text-text-muted">{distance} away</span>
           </div>
-        </div>
-        <p className="text-text-muted text-sm mb-2">{displayAuthor}</p>
 
-        <div className="flex items-center gap-2 mb-3">
-          <span className="px-2 py-0.5 bg-primary-light text-primary text-xs rounded">
-            {displayGenre}
-          </span>
-          <span className="text-xs text-text-muted">{distance} away</span>
-        </div>
-
-        <div className="flex items-center justify-between">
-          <p className="text-primary font-semibold">{displayPrice}</p>
-          <button
-            disabled={!available}
-            className={`px-3 py-1.5 rounded text-sm font-medium transition-colors ${
-              available
-                ? "bg-primary text-white hover:bg-primary-hover"
-                : "bg-border text-text-muted cursor-not-allowed"
-            }`}
-          >
-            {available ? "Rent Now" : "Unavailable"}
-          </button>
+          <div className="flex items-center justify-between">
+            <p className="text-primary font-semibold">{displayPrice}</p>
+            <button
+              disabled={!available}
+              className={`px-3 py-1.5 rounded text-sm font-medium transition-colors ${
+                available
+                  ? "bg-primary text-white hover:bg-primary-hover"
+                  : "bg-border text-text-muted cursor-not-allowed"
+              }`}
+            >
+              {available ? "Rent Now" : "Unavailable"}
+            </button>
+          </div>
         </div>
       </div>
-    </div>
+    </Link>
   );
 };
 

@@ -62,6 +62,7 @@
 const {
   getAllBooksService,
   getBookByIdService,
+  getBookBySlugService,
   getFeaturedBooksService,
   getMostRentedBooksService,
   getBooksByGenreService,
@@ -137,6 +138,33 @@ exports.getBookById = async (req, res, next) => {
     const { location, pincode } = req.query;
 
     const book = await getBookByIdService(id, { location, pincode });
+
+    if (!book) {
+      return res.status(404).json({
+        success: false,
+        message: "Book not found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Book fetched successfully",
+      data: book,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * Get a single book by SLUG with detailed information including libraries
+ */
+exports.getBookBySlug = async (req, res, next) => {
+  try {
+    const { slug } = req.params;
+    const { location, pincode } = req.query;
+
+    const book = await getBookBySlugService(slug, { location, pincode });
 
     if (!book) {
       return res.status(404).json({

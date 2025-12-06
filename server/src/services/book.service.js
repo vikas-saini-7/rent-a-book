@@ -324,6 +324,104 @@ exports.getBookByIdService = async (bookId, options = {}) => {
 };
 
 /**
+ * Get a single book by SLUG with detailed information including libraries
+ */
+exports.getBookBySlugService = async (bookSlug, options = {}) => {
+  const { location, pincode } = options;
+
+  let query = db
+    .select({
+      id: books.id,
+      title: books.title,
+      slug: books.slug,
+      isbn: books.isbn,
+      description: books.description,
+      coverImage: books.coverImage,
+      publisher: books.publisher,
+      publishedYear: books.publishedYear,
+      language: books.language,
+      totalPages: books.totalPages,
+      rentalPricePerWeek: books.rentalPricePerWeek,
+      depositAmount: books.depositAmount,
+      condition: books.condition,
+      isFeatured: books.isFeatured,
+      averageRating: books.averageRating,
+      totalRatings: books.totalRatings,
+      totalRentals: books.totalRentals,
+      createdAt: books.createdAt,
+      author: {
+        id: authors.id,
+        name: authors.name,
+        bio: authors.bio,
+        imageUrl: authors.imageUrl,
+      },
+      genre: {
+        id: genres.id,
+        name: genres.name,
+        slug: genres.slug,
+      },
+    })
+    .from(books)
+    .leftJoin(authors, eq(books.authorId, authors.id))
+    .leftJoin(genres, eq(books.genreId, genres.id))
+    .where(eq(books.slug, bookSlug));
+
+  const [book] = await query;
+
+  if (!book) {
+    return null;
+  }
+
+  // Get availability from libraries with detailed information
+  let librariesQuery = db
+    .select({
+      id: libraries.id,
+      name: libraries.name,
+      slug: libraries.slug,
+      city: libraries.city,
+      state: libraries.state,
+      postalCode: libraries.postalCode,
+      addressLine1: libraries.addressLine1,
+      addressLine2: libraries.addressLine2,
+      phone: libraries.phone,
+      email: libraries.email,
+      totalCopies: libraryBooks.totalCopies,
+      availableCopies: libraryBooks.availableCopies,
+      isAvailable: libraryBooks.isAvailable,
+    })
+    .from(libraryBooks)
+    .innerJoin(libraries, eq(libraryBooks.libraryId, libraries.id));
+
+  // Build library conditions
+  const libConditions = [eq(libraryBooks.bookId, book.id)];
+
+  // Filter by location if provided
+  if (pincode) {
+    libConditions.push(eq(libraries.postalCode, pincode));
+  } else if (location) {
+    libConditions.push(ilike(libraries.city, `%${location}%`));
+  }
+
+  // Apply conditions
+  if (libConditions.length > 1) {
+    librariesQuery = librariesQuery.where(and(...libConditions));
+  } else {
+    librariesQuery = librariesQuery.where(libConditions[0]);
+  }
+
+  const availableLibraries = await librariesQuery;
+
+  return {
+    ...book,
+    libraries: availableLibraries,
+    totalAvailableCopies: availableLibraries.reduce(
+      (sum, lib) => sum + (lib.availableCopies || 0),
+      0
+    ),
+  };
+};
+
+/**
  * Get featured books
  */
 exports.getFeaturedBooksService = async (options = {}) => {
