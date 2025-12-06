@@ -222,7 +222,7 @@ export default function BookDetailPage() {
               </div>
 
               {/* Quick Info */}
-              <div className="bg-bg-card border border-border rounded-lg p-4 space-y-3">
+              <div className="bg-bg-card border border-border rounded-lg p-4 space-y-2">
                 <div>
                   <p className="text-xs text-text-muted mb-1">Language</p>
                   <p className="text-sm text-text-primary font-medium">
@@ -233,12 +233,6 @@ export default function BookDetailPage() {
                   <p className="text-xs text-text-muted mb-1">Pages</p>
                   <p className="text-sm text-text-primary font-medium">
                     {book.totalPages}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-xs text-text-muted mb-1">ISBN</p>
-                  <p className="text-sm text-text-primary font-medium">
-                    {book.isbn}
                   </p>
                 </div>
               </div>
@@ -299,28 +293,16 @@ export default function BookDetailPage() {
             {/* Book Info */}
             <div className="grid grid-cols-2 gap-4">
               <div className="bg-bg-card border border-border rounded-lg p-4">
-                <p className="text-xs text-text-muted mb-1">Publisher</p>
-                <p className="text-sm text-text-primary font-medium">
-                  {book.publisher}
-                </p>
-              </div>
-              <div className="bg-bg-card border border-border rounded-lg p-4">
-                <p className="text-xs text-text-muted mb-1">Published</p>
-                <p className="text-sm text-text-primary font-medium">
-                  {book.publishedYear}
-                </p>
-              </div>
-              <div className="bg-bg-card border border-border rounded-lg p-4">
                 <p className="text-xs text-text-muted mb-1">
                   Rental Price/Week
                 </p>
-                <p className="text-sm text-primary font-semibold">
+                <p className="text-lg text-primary font-semibold">
                   ₹{book.rentalPricePerWeek}
                 </p>
               </div>
               <div className="bg-bg-card border border-border rounded-lg p-4">
                 <p className="text-xs text-text-muted mb-1">Deposit</p>
-                <p className="text-sm text-text-primary font-medium">
+                <p className="text-lg text-text-primary font-semibold">
                   ₹{book.depositAmount}
                 </p>
               </div>
@@ -370,21 +352,16 @@ export default function BookDetailPage() {
                     </div>
 
                     {/* Availability */}
-                    <div className="grid grid-cols-2 gap-3">
-                      <div className="bg-bg-card rounded-lg p-3 border border-border">
-                        <p className="text-xs text-text-muted mb-1">
-                          Available Copies
-                        </p>
-                        <p className="text-2xl font-bold text-primary">
-                          {book.libraries[0].availableCopies || 0}
-                        </p>
-                      </div>
-                      <div className="bg-bg-card rounded-lg p-3 border border-border">
-                        <p className="text-xs text-text-muted mb-1">In Stock</p>
-                        <p className="text-sm text-text-primary font-semibold">
-                          {book.libraries[0].totalCopies || 0} copies
-                        </p>
-                      </div>
+                    <div className="bg-bg-card rounded-lg p-4 border border-border">
+                      <p className="text-xs text-text-muted mb-2">
+                        Availability
+                      </p>
+                      <p className="text-2xl font-bold text-primary">
+                        {book.libraries[0].availableCopies || 0}{" "}
+                        <span className="text-sm text-text-secondary font-normal">
+                          copies available
+                        </span>
+                      </p>
                     </div>
 
                     {/* Contact Info */}

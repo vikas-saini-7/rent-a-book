@@ -85,7 +85,6 @@ export default function CollectionPage() {
           <TopFilters
             onSearch={handleSearch}
             onSortChange={handleSortChange}
-            totalBooks={totalBooks}
             currentSearch={searchQuery}
           />
         </Suspense>

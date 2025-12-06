@@ -26,14 +26,12 @@ const quickFilters = [
 interface TopFiltersProps {
   onSearch?: (query: string) => void;
   onSortChange?: (sortBy: string) => void;
-  totalBooks?: number;
   currentSearch?: string;
 }
 
 const TopFilters = ({
   onSearch,
   onSortChange,
-  totalBooks = 0,
   currentSearch = "",
 }: TopFiltersProps) => {
   const [searchQuery, setSearchQuery] = useState(currentSearch);
@@ -152,25 +150,6 @@ const TopFilters = ({
             </button>
           );
         })}
-      </div>
-
-      {/* Results Count */}
-      <div className="flex items-center justify-between text-sm">
-        <p className="text-text-secondary">
-          Showing{" "}
-          <span className="font-medium text-text-primary">
-            {Math.min(12, totalBooks)}
-          </span>{" "}
-          of <span className="font-medium text-text-primary">{totalBooks}</span>{" "}
-          books
-          {currentSearch && (
-            <span>
-              {" "}
-              for &quot;<span className="text-primary">{currentSearch}</span>
-              &quot;
-            </span>
-          )}
-        </p>
       </div>
     </div>
   );
