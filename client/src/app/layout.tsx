@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Playfair_Display, Lexend } from "next/font/google";
 import "./globals.css";
+import { AuthProvider } from "@/contexts/AuthContext";
 
 const playfairDisplay = Playfair_Display({
   variable: "--font-playfair-display",
@@ -27,7 +28,7 @@ export default function RootLayout({
       <body
         className={`${playfairDisplay.variable} ${lexend.variable} antialiased font-body`}
       >
-        {children}
+        <AuthProvider>{children}</AuthProvider>
       </body>
     </html>
   );

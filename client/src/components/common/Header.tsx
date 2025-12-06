@@ -14,6 +14,7 @@ import {
   IconX,
   IconArrowRight,
 } from "@tabler/icons-react";
+import { useAuth } from "@/contexts/AuthContext";
 
 const recentSearches = ["The Great Gatsby", "Harry Potter", "Fiction books"];
 const popularBooks = [
@@ -24,6 +25,7 @@ const popularBooks = [
 
 const Header = () => {
   const router = useRouter();
+  const { user, logout, isAuthenticated } = useAuth();
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -89,7 +91,11 @@ const Header = () => {
     setSearchQuery("");
   };
 
-  const isLoggedIn = true; // Toggle this to switch between logged in/out states
+  const handleLogout = async () => {
+    await logout();
+    setIsProfileOpen(false);
+    router.push("/");
+  };
 
   return (
     <header className="w-full border-b border-border bg-bg-card">
@@ -293,7 +299,7 @@ const Header = () => {
             )}
           </div>
 
-          {isLoggedIn ? (
+          {isAuthenticated ? (
             /* Profile Dropdown */
             <div className="relative" ref={dropdownRef}>
               <button
@@ -301,7 +307,15 @@ const Header = () => {
                 className="flex items-center gap-2 p-1.5 rounded-full hover:bg-bg-main transition-colors"
               >
                 <div className="w-8 h-8 rounded-full bg-primary-light flex items-center justify-center">
-                  <IconUser size={18} className="text-primary" />
+                  {user?.avatarUrl ? (
+                    <img
+                      src={user.avatarUrl}
+                      alt={user.fullName}
+                      className="w-full h-full rounded-full object-cover"
+                    />
+                  ) : (
+                    <IconUser size={18} className="text-primary" />
+                  )}
                 </div>
                 <IconChevronDown
                   size={16}
@@ -316,8 +330,10 @@ const Header = () => {
                 <div className="absolute right-0 mt-2 w-56 bg-bg-card border border-border rounded-lg shadow-lg py-2 z-50">
                   {/* User Info */}
                   <div className="px-4 py-3 border-b border-border">
-                    <p className="font-medium text-text-primary">John Doe</p>
-                    <p className="text-sm text-text-muted">john@example.com</p>
+                    <p className="font-medium text-text-primary">
+                      {user?.fullName || "User"}
+                    </p>
+                    <p className="text-sm text-text-muted">{user?.email}</p>
                   </div>
 
                   {/* Menu Items */}
@@ -368,7 +384,7 @@ const Header = () => {
                   <div className="border-t border-border pt-1">
                     <button
                       className="flex items-center gap-3 px-4 py-2 w-full text-error hover:bg-bg-main transition-colors"
-                      onClick={() => setIsProfileOpen(false)}
+                      onClick={handleLogout}
                     >
                       <IconLogout size={18} />
                       <span>Logout</span>

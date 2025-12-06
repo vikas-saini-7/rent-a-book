@@ -1,9 +1,11 @@
 const { Router } = require("express");
+const authRoutes = require("./auth.routes.js");
 const profileRoutes = require("./profile.routes.js");
 
 const router = Router();
 
 // Mount all routes
+router.use("/auth", authRoutes);
 router.use("/profile", profileRoutes);
 
 // Add more routes here as needed

@@ -1,5 +1,8 @@
+"use client";
+
 import Header from "@/components/common/Header";
 import Footer from "@/components/common/Footer";
+import { useAuth } from "@/contexts/AuthContext";
 import {
   IconUser,
   IconMail,
@@ -10,6 +13,8 @@ import {
 } from "@tabler/icons-react";
 
 export default function ProfilePage() {
+  const { user } = useAuth();
+
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
@@ -35,7 +40,7 @@ export default function ProfilePage() {
             {/* Info */}
             <div className="text-center sm:text-left flex-1">
               <h2 className="text-xl font-semibold text-text-primary">
-                John Doe
+                {user?.fullName || "User"}
               </h2>
               <p className="text-text-muted">Member since January 2024</p>
               <div className="flex items-center justify-center sm:justify-start gap-4 mt-2">
@@ -68,7 +73,7 @@ export default function ProfilePage() {
               </div>
               <div>
                 <p className="text-sm text-text-muted">Full Name</p>
-                <p className="text-text-primary">John Doe</p>
+                <p className="text-text-primary">{user?.fullName || "-"}</p>
               </div>
             </div>
 
@@ -78,7 +83,7 @@ export default function ProfilePage() {
               </div>
               <div>
                 <p className="text-sm text-text-muted">Email</p>
-                <p className="text-text-primary">john@example.com</p>
+                <p className="text-text-primary">{user?.email || "-"}</p>
               </div>
             </div>
 
@@ -88,7 +93,7 @@ export default function ProfilePage() {
               </div>
               <div>
                 <p className="text-sm text-text-muted">Phone</p>
-                <p className="text-text-primary">+91 98765 43210</p>
+                <p className="text-text-primary">-</p>
               </div>
             </div>
 
@@ -98,7 +103,7 @@ export default function ProfilePage() {
               </div>
               <div>
                 <p className="text-sm text-text-muted">Address</p>
-                <p className="text-text-primary">New Delhi, India</p>
+                <p className="text-text-primary">-</p>
               </div>
             </div>
           </div>
