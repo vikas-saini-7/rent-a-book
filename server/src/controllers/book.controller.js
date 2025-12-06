@@ -188,7 +188,7 @@ exports.getBookBySlug = async (req, res, next) => {
  */
 exports.getFeaturedBooks = async (req, res, next) => {
   try {
-    const { limit = 12, location, pincode } = req.query;
+    const { limit = 4, location, pincode } = req.query;
 
     const books = await getFeaturedBooksService({
       limit: parseInt(limit),
@@ -211,7 +211,7 @@ exports.getFeaturedBooks = async (req, res, next) => {
  */
 exports.getMostRentedBooks = async (req, res, next) => {
   try {
-    const { limit = 12, location, pincode } = req.query;
+    const { limit = 4, location, pincode } = req.query;
 
     const books = await getMostRentedBooksService({
       limit: parseInt(limit),
