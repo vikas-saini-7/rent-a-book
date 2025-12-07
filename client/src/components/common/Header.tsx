@@ -14,8 +14,10 @@ import {
   IconX,
   IconArrowRight,
   IconWallet,
+  IconShoppingCart,
 } from "@tabler/icons-react";
 import { useAuth } from "@/contexts/AuthContext";
+import { useCart } from "@/contexts/CartContext";
 
 const recentSearches = ["The Great Gatsby", "Harry Potter", "Fiction books"];
 const popularBooks = [
@@ -27,12 +29,15 @@ const popularBooks = [
 const Header = () => {
   const router = useRouter();
   const { user, logout, isAuthenticated } = useAuth();
+  const { getTotalItems } = useCart();
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const dropdownRef = useRef<HTMLDivElement>(null);
   const searchRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
+
+  const cartItemCount = getTotalItems();
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -299,6 +304,21 @@ const Header = () => {
               </>
             )}
           </div>
+
+          {/* Cart Icon */}
+          {isAuthenticated && (
+            <Link
+              href="/cart"
+              className="relative p-2 text-text-secondary hover:text-primary transition-colors"
+            >
+              <IconShoppingCart size={20} />
+              {cartItemCount > 0 && (
+                <span className="absolute -top-1 -right-1 bg-primary text-white text-xs font-semibold rounded-full h-5 w-5 flex items-center justify-center">
+                  {cartItemCount}
+                </span>
+              )}
+            </Link>
+          )}
 
           {isAuthenticated ? (
             /* Profile Dropdown */

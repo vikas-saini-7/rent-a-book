@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Playfair_Display, Lexend } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { CartProvider } from "@/contexts/CartContext";
 
 const playfairDisplay = Playfair_Display({
   variable: "--font-playfair-display",
@@ -28,7 +29,9 @@ export default function RootLayout({
       <body
         className={`${playfairDisplay.variable} ${lexend.variable} antialiased font-body`}
       >
-        <AuthProvider>{children}</AuthProvider>
+        <AuthProvider>
+          <CartProvider>{children}</CartProvider>
+        </AuthProvider>
       </body>
     </html>
   );

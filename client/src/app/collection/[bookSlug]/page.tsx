@@ -6,6 +6,7 @@ import axios from "axios";
 import Header from "@/components/common/Header";
 import Footer from "@/components/common/Footer";
 import { useAuth } from "@/contexts/AuthContext";
+import { useCart } from "@/contexts/CartContext";
 import {
   IconArrowLeft,
   IconStar,
@@ -17,6 +18,8 @@ import {
   IconClock,
   IconWallet,
   IconAlertCircle,
+  IconShoppingCart,
+  IconCheck,
 } from "@tabler/icons-react";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
@@ -74,11 +77,13 @@ export default function BookDetailPage() {
   const router = useRouter();
   const bookSlug = params.bookSlug as string;
   const { user, isAuthenticated } = useAuth();
+  const { addToCart, isInCart } = useCart();
 
   const [book, setBook] = useState<BookDetails | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [liked, setLiked] = useState(false);
+  const [addedToCart, setAddedToCart] = useState(false);
 
   const { availableDeposit, hasEnoughDeposit, depositShortfall } =
     useMemo(() => {
@@ -122,6 +127,13 @@ export default function BookDetailPage() {
       fetchBookDetails();
     }
   }, [bookSlug]);
+
+  // Check if book is in cart whenever book or cart changes
+  useEffect(() => {
+    if (book) {
+      setAddedToCart(isInCart(book.id));
+    }
+  }, [book, isInCart]);
 
   if (loading) {
     return (
@@ -185,6 +197,26 @@ export default function BookDetailPage() {
       return (book.genre as any).name || "Unknown";
     }
     return "Unknown";
+  };
+
+  const handleAddToCart = () => {
+    if (!book || !book.libraries || book.libraries.length === 0) return;
+
+    const cartItem = {
+      bookId: book.id,
+      title: book.title,
+      author: getAuthorName(),
+      coverImage: book.coverImage,
+      rentalPricePerWeek: book.rentalPricePerWeek,
+      depositAmount: book.depositAmount,
+      libraryId: book.libraries[0].id || "",
+      libraryName: book.libraries[0].name || "",
+      availableCopies: book.libraries[0].availableCopies || 0,
+      quantity: 1,
+    };
+
+    addToCart(cartItem);
+    setAddedToCart(true);
   };
 
   return (
@@ -469,9 +501,31 @@ export default function BookDetailPage() {
 
                     {/* Rent Button */}
                     {isAuthenticated && hasEnoughDeposit && (
-                      <button className="w-full px-6 py-3 bg-primary hover:bg-primary-hover text-white rounded-lg font-semibold transition-colors">
-                        Start Renting • ₹{book.rentalPricePerWeek}/week
-                      </button>
+                      <div className="flex gap-3">
+                        {!addedToCart ? (
+                          <button
+                            onClick={handleAddToCart}
+                            className="flex-1 px-6 py-3 bg-primary hover:bg-primary-hover text-white rounded-lg font-semibold transition-colors flex items-center justify-center gap-2"
+                          >
+                            <IconShoppingCart size={20} />
+                            Add to Cart
+                          </button>
+                        ) : (
+                          <button
+                            disabled
+                            className="flex-1 px-6 py-3 bg-green-600 text-white rounded-lg font-semibold cursor-not-allowed flex items-center justify-center gap-2"
+                          >
+                            <IconCheck size={20} />
+                            Added to Cart
+                          </button>
+                        )}
+                        <button
+                          onClick={() => router.push("/cart")}
+                          className="px-6 py-3 border-2 border-primary text-primary hover:bg-primary hover:text-white rounded-lg font-semibold transition-colors"
+                        >
+                          View Cart
+                        </button>
+                      </div>
                     )}
 
                     {!isAuthenticated && (
