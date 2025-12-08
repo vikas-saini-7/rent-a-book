@@ -3,6 +3,7 @@
 import Header from "@/components/common/Header";
 import Footer from "@/components/common/Footer";
 import { useAuth } from "@/contexts/AuthContext";
+import Link from "next/link";
 import {
   IconUser,
   IconMail,
@@ -10,10 +11,24 @@ import {
   IconMapPin,
   IconEdit,
   IconCamera,
+  IconWallet,
+  IconLoader2,
 } from "@tabler/icons-react";
 
 export default function ProfilePage() {
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
+
+  if (authLoading || !user) {
+    return (
+      <div className="min-h-screen flex flex-col">
+        <Header />
+        <main className="flex-1 flex items-center justify-center">
+          <IconLoader2 className="animate-spin text-primary" size={40} />
+        </main>
+        <Footer />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -29,9 +44,17 @@ export default function ProfilePage() {
           <div className="flex flex-col sm:flex-row items-center gap-6">
             {/* Avatar */}
             <div className="relative">
-              <div className="w-24 h-24 rounded-full bg-primary-light flex items-center justify-center">
-                <IconUser size={40} className="text-primary" />
-              </div>
+              {user.avatarUrl ? (
+                <img
+                  src={user.avatarUrl}
+                  alt={user.fullName}
+                  className="w-24 h-24 rounded-full object-cover"
+                />
+              ) : (
+                <div className="w-24 h-24 rounded-full bg-primary-light flex items-center justify-center">
+                  <IconUser size={40} className="text-primary" />
+                </div>
+              )}
               <button className="absolute bottom-0 right-0 p-2 bg-primary text-white rounded-full hover:bg-primary-hover transition-colors">
                 <IconCamera size={16} />
               </button>
@@ -40,24 +63,60 @@ export default function ProfilePage() {
             {/* Info */}
             <div className="text-center sm:text-left flex-1">
               <h2 className="text-xl font-semibold text-text-primary">
-                {user?.fullName || "User"}
+                {user.fullName}
               </h2>
-              <p className="text-text-muted">Member since January 2024</p>
-              <div className="flex items-center justify-center sm:justify-start gap-4 mt-2">
-                <span className="text-sm text-text-secondary">
-                  <strong className="text-primary">12</strong> Books Rented
-                </span>
-                <span className="text-sm text-text-secondary">
-                  <strong className="text-primary">3</strong> Currently Reading
-                </span>
-              </div>
+              <p className="text-text-muted">
+                Member since{" "}
+                {new Date(user.createdAt || "").toLocaleDateString("en-US", {
+                  month: "long",
+                  year: "numeric",
+                })}
+              </p>
+              <p className="text-sm text-text-secondary mt-1">
+                {user.isPremium ? "Premium Member" : "Standard Member"}
+              </p>
             </div>
 
             {/* Edit Button */}
-            <button className="flex items-center gap-2 px-4 py-2 border border-border rounded-md text-text-secondary hover:border-primary hover:text-primary transition-colors">
+            <Link
+              href="/settings/account"
+              className="flex items-center gap-2 px-4 py-2 border border-border rounded-md text-text-secondary hover:border-primary hover:text-primary transition-colors"
+            >
               <IconEdit size={18} />
               <span>Edit Profile</span>
-            </button>
+            </Link>
+          </div>
+        </div>
+
+        {/* Wallet Balance */}
+        <div className="bg-bg-card border border-border rounded-lg p-6 mb-6">
+          <h3 className="font-semibold text-text-primary mb-4 flex items-center gap-2">
+            <IconWallet size={20} />
+            Wallet Balance
+          </h3>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="bg-bg-main rounded-lg p-4">
+              <p className="text-sm text-text-muted mb-1">Total Deposit</p>
+              <p className="text-2xl font-semibold text-primary">
+                ₹{parseFloat(user.depositBalance || "0").toFixed(2)}
+              </p>
+            </div>
+            <div className="bg-bg-main rounded-lg p-4">
+              <p className="text-sm text-text-muted mb-1">Locked in Rentals</p>
+              <p className="text-2xl font-semibold text-orange-500">
+                ₹{parseFloat(user.lockedBalance || "0").toFixed(2)}
+              </p>
+            </div>
+            <div className="bg-bg-main rounded-lg p-4">
+              <p className="text-sm text-text-muted mb-1">Available Balance</p>
+              <p className="text-2xl font-semibold text-green-600">
+                ₹
+                {(
+                  parseFloat(user.depositBalance || "0") -
+                  parseFloat(user.lockedBalance || "0")
+                ).toFixed(2)}
+              </p>
+            </div>
           </div>
         </div>
 
@@ -71,9 +130,9 @@ export default function ProfilePage() {
               <div className="w-10 h-10 rounded-full bg-bg-main flex items-center justify-center">
                 <IconUser size={18} className="text-text-muted" />
               </div>
-              <div>
+              <div className="flex-1">
                 <p className="text-sm text-text-muted">Full Name</p>
-                <p className="text-text-primary">{user?.fullName || "-"}</p>
+                <p className="text-text-primary">{user.fullName}</p>
               </div>
             </div>
 
@@ -83,7 +142,7 @@ export default function ProfilePage() {
               </div>
               <div>
                 <p className="text-sm text-text-muted">Email</p>
-                <p className="text-text-primary">{user?.email || "-"}</p>
+                <p className="text-text-primary">{user.email}</p>
               </div>
             </div>
 
@@ -91,9 +150,9 @@ export default function ProfilePage() {
               <div className="w-10 h-10 rounded-full bg-bg-main flex items-center justify-center">
                 <IconPhone size={18} className="text-text-muted" />
               </div>
-              <div>
+              <div className="flex-1">
                 <p className="text-sm text-text-muted">Phone</p>
-                <p className="text-text-primary">{user?.phone || "-"}</p>
+                <p className="text-text-primary">{user.phone || "-"}</p>
               </div>
             </div>
 
@@ -103,7 +162,7 @@ export default function ProfilePage() {
               </div>
               <div>
                 <p className="text-sm text-text-muted">Address</p>
-                <p className="text-text-primary">{false || "-"}</p>
+                <p className="text-text-primary">-</p>
               </div>
             </div>
           </div>

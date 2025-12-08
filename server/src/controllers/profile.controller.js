@@ -1,69 +1,55 @@
-const profileService = require("../services/profile.service.js");
+const {
+  getProfileByIdService,
+  updateProfileService,
+  deleteProfileService,
+} = require("../services/profile.service.js");
 
-const getProfile = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const profile = await profileService.getProfileById(id);
+/**
+ * Get current user's profile
+ * GET /api/profile
+ */
+exports.getProfile = async (req, res) => {
+  // User ID comes from authenticate middleware (req.user.id)
+  const profile = await getProfileByIdService(req.user.id);
 
-    if (!profile) {
-      return res.status(404).json({ message: "Profile not found" });
-    }
-
-    res.json(profile);
-  } catch (error) {
-    console.error("Error getting profile:", error);
-    res.status(500).json({ message: "Internal server error" });
-  }
+  res.status(200).json({
+    success: true,
+    message: "Profile fetched successfully",
+    data: profile,
+  });
 };
 
-const createProfile = async (req, res) => {
-  try {
-    const profileData = req.body;
-    const newProfile = await profileService.createProfile(profileData);
+/**
+ * Update current user's profile
+ * PUT /api/profile
+ */
+exports.updateProfile = async (req, res) => {
+  // User ID comes from authenticate middleware (req.user.id)
+  const profileData = req.body;
 
-    res.status(201).json(newProfile);
-  } catch (error) {
-    console.error("Error creating profile:", error);
-    res.status(500).json({ message: "Internal server error" });
-  }
+  const updatedProfile = await updateProfileService(req.user.id, profileData);
+
+  res.status(200).json({
+    success: true,
+    message: "Profile updated successfully",
+    data: updatedProfile,
+  });
 };
 
-const updateProfile = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const profileData = req.body;
-    const updatedProfile = await profileService.updateProfile(id, profileData);
+/**
+ * Delete current user's account
+ * DELETE /api/profile
+ */
+exports.deleteProfile = async (req, res) => {
+  // User ID comes from authenticate middleware (req.user.id)
+  await deleteProfileService(req.user.id);
 
-    if (!updatedProfile) {
-      return res.status(404).json({ message: "Profile not found" });
-    }
+  // Clear cookies
+  res.clearCookie("accessToken");
+  res.clearCookie("refreshToken");
 
-    res.json(updatedProfile);
-  } catch (error) {
-    console.error("Error updating profile:", error);
-    res.status(500).json({ message: "Internal server error" });
-  }
-};
-
-const deleteProfile = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const deleted = await profileService.deleteProfile(id);
-
-    if (!deleted) {
-      return res.status(404).json({ message: "Profile not found" });
-    }
-
-    res.json({ message: "Profile deleted successfully" });
-  } catch (error) {
-    console.error("Error deleting profile:", error);
-    res.status(500).json({ message: "Internal server error" });
-  }
-};
-
-module.exports = {
-  getProfile,
-  createProfile,
-  updateProfile,
-  deleteProfile,
+  res.status(200).json({
+    success: true,
+    message: "Account deleted successfully",
+  });
 };

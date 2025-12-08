@@ -1,23 +1,20 @@
-const { Router } = require("express");
-const {
-  getProfile,
-  createProfile,
-  updateProfile,
-  deleteProfile,
-} = require("../controllers/profile.controller.js");
+const express = require("express");
+const router = express.Router();
 
-const router = Router();
+const { asyncHandler } = require("../middlewares/error.middleware.js");
+const { authenticate } = require("../middlewares/authenticate.middleware.js");
+const profileController = require("../controllers/profile.controller.js");
 
-// GET /api/profile/:id - Get profile by ID
-router.get("/:id", getProfile);
+// All profile routes require authentication
+router.use(authenticate);
 
-// POST /api/profile - Create a new profile
-router.post("/", createProfile);
+// GET /api/profile - Get current user's profile
+router.get("/", asyncHandler(profileController.getProfile));
 
-// PUT /api/profile/:id - Update profile
-router.put("/:id", updateProfile);
+// PUT /api/profile - Update current user's profile
+router.put("/", asyncHandler(profileController.updateProfile));
 
-// DELETE /api/profile/:id - Delete profile
-router.delete("/:id", deleteProfile);
+// DELETE /api/profile - Delete current user's account
+router.delete("/", asyncHandler(profileController.deleteProfile));
 
 module.exports = router;
