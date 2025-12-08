@@ -1,6 +1,7 @@
 "use client";
 
-import { Suspense, useState, useCallback } from "react";
+import { Suspense, useState, useCallback, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import Header from "@/components/common/Header";
 import Footer from "@/components/common/Footer";
 import {
@@ -9,9 +10,10 @@ import {
   TopFilters,
   BookGrid,
   Pagination,
-} from "../../components/collection";
+} from "../../../components/collection";
 
-export default function CollectionPage() {
+function CollectionContent() {
+  const searchParams = useSearchParams();
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalBooks, setTotalBooks] = useState(0);
@@ -25,6 +27,14 @@ export default function CollectionPage() {
     priceRange: [0, 100] as [number, number],
   });
   const [isLoading, setIsLoading] = useState(false);
+
+  // Read search query from URL params on mount
+  useEffect(() => {
+    const searchFromUrl = searchParams.get("search");
+    if (searchFromUrl) {
+      setSearchQuery(searchFromUrl);
+    }
+  }, [searchParams]);
 
   const handleFilterChange = useCallback(
     (newFilters: {
@@ -65,15 +75,17 @@ export default function CollectionPage() {
       <Header />
 
       <main className="flex-1 max-w-7xl mx-auto px-6 py-8 w-full">
-        {/* Location Section */}
-        <div className="mb-8">
-          <h1 className="text-3xl md:text-4xl font-heading text-text-primary mb-4">
+        {/* Header Section with Location */}
+        <div className="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <h1 className="text-3xl md:text-4xl font-heading text-text-primary">
             Browse Collection
           </h1>
-          <LocationInput
-            onLocationChange={handleLocationChange}
-            initialLocation={location}
-          />
+          <div className="w-full sm:w-64">
+            <LocationInput
+              onLocationChange={handleLocationChange}
+              initialLocation={location}
+            />
+          </div>
         </div>
 
         {/* Top Filters */}
@@ -122,5 +134,17 @@ export default function CollectionPage() {
 
       <Footer />
     </div>
+  );
+}
+
+export default function CollectionPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+      </div>
+    }>
+      <CollectionContent />
+    </Suspense>
   );
 }

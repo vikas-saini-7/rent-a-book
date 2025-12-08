@@ -52,35 +52,27 @@ const LocationInput = ({
   };
 
   return (
-    <div className="bg-bg-card border border-border rounded-lg p-4">
-      <div className="flex flex-col sm:flex-row gap-3">
-        <div className="relative flex-1">
-          <IconMapPin
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted"
-            size={20}
-          />
-          <input
-            type="text"
-            placeholder="Enter your location or pincode"
-            value={location}
-            onChange={(e) => handleLocationChange(e.target.value)}
-            className="w-full pl-10 pr-4 py-3 bg-bg-main border border-border rounded-md text-text-primary placeholder:text-text-muted focus:outline-none focus:border-primary"
-          />
-        </div>
-        <button
-          onClick={handleGetCurrentLocation}
-          className="flex items-center justify-center gap-2 px-4 py-3 bg-primary-light text-primary rounded-md hover:bg-primary hover:text-white transition-colors"
-        >
-          <IconCurrentLocation size={20} />
-          <span className="whitespace-nowrap">Use Current Location</span>
-        </button>
+    <div className="flex items-center gap-2">
+      <div className="relative flex-1">
+        <IconMapPin
+          className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted"
+          size={18}
+        />
+        <input
+          type="text"
+          placeholder="Location or pincode"
+          value={location}
+          onChange={(e) => handleLocationChange(e.target.value)}
+          className="w-full pl-9 pr-3 py-2 bg-bg-card border border-border rounded-md text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:border-primary transition-colors"
+        />
       </div>
-      {location && location !== "Detecting location..." && (
-        <p className="mt-3 text-sm text-text-secondary">
-          Showing books available near{" "}
-          <span className="font-medium text-primary">{location}</span>
-        </p>
-      )}
+      <button
+        onClick={handleGetCurrentLocation}
+        title="Use current location"
+        className="p-2 bg-bg-card border border-border text-text-muted rounded-md hover:border-primary hover:text-primary transition-colors"
+      >
+        <IconCurrentLocation size={18} />
+      </button>
     </div>
   );
 };
