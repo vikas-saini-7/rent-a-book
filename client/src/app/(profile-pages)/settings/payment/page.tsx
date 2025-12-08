@@ -7,11 +7,21 @@ export default function PaymentPage() {
         <h2 className="text-lg font-semibold text-text-primary">
           Payment Methods
         </h2>
-        <button className="text-sm text-primary hover:underline">
+        {/* <button className="text-sm text-primary hover:underline">
           + Add New
-        </button>
+        </button> */}
       </div>
-      <div className="space-y-3">
+
+      {/* add coming soon  */}
+      <div className="py-12 text-center text-text-muted">
+        <p className="text-lg mb-4">Payment Methods coming soon!</p>
+        <p className="text-sm">
+          We are working hard to integrate secure payment options for your
+          convenience.
+        </p>
+      </div>
+
+      {/* <div className="space-y-3">
         <div className="p-4 border border-border rounded-md flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-10 h-6 bg-primary-light rounded flex items-center justify-center text-xs font-bold text-primary">
@@ -32,7 +42,7 @@ export default function PaymentPage() {
           </div>
           <p className="text-text-primary">john@upi</p>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }
