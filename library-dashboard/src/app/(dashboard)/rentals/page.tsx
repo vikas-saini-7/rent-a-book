@@ -35,7 +35,7 @@ export default function RentalsPage() {
         </div>
         <div className="overflow-hidden rounded-lg border border-border">
           <table className="w-full text-sm">
-            <thead className="bg-gradient-to-r from-gray-50 to-gray-100/50 text-text-secondary">
+            <thead className="bg-gradient-to-r from-stone-200 to-stone-300/80 text-text-secondary">
               <tr>
                 <th className="px-4 py-3 text-left font-medium">Rental ID</th>
                 <th className="px-4 py-3 text-left font-medium">Member</th>

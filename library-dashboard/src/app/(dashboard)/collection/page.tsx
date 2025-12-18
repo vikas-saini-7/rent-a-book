@@ -41,7 +41,7 @@ export default function InventoryPage() {
         </div>
         <div className="overflow-hidden rounded-xl border border-border">
           <table className="w-full text-sm">
-            <thead className="bg-gradient-to-r from-gray-50 to-gray-100/50 text-text-secondary">
+            <thead className="bg-gradient-to-r from-stone-200 to-stone-300/80 text-text-secondary">
               <tr>
                 <th className="px-5 py-3.5 text-left font-semibold text-xs uppercase tracking-wide">
                   Title

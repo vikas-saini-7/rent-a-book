@@ -39,10 +39,10 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-bg-main via-blue-50/40 to-cyan-50/30 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-bg-main via-amber-50/40 to-orange-50/20 px-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <div className="inline-flex h-16 w-16 rounded-2xl bg-gradient-to-br from-primary to-accent-secondary text-white items-center justify-center font-bold text-2xl shadow-xl shadow-blue-900/20 mb-4">
+          <div className="inline-flex h-16 w-16 rounded-2xl bg-gradient-to-br from-primary to-accent-secondary text-white items-center justify-center font-bold text-2xl shadow-xl shadow-amber-900/20 mb-4">
             R
           </div>
           <h1 className="text-3xl font-bold text-text-primary mb-2">
