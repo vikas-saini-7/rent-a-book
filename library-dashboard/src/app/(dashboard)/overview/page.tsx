@@ -191,6 +191,8 @@ export default function OverviewPage() {
   const reservedCount = rentals.filter((r) => r.status === "reserved").length;
   const catalogSize = inventory.reduce((sum, item) => sum + item.total, 0);
 
+  return null;
+
   return (
     <div className="space-y-6">
       <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
