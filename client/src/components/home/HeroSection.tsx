@@ -12,7 +12,9 @@ const HeroSection = () => {
           <h1 className="text-5xl md:text-6xl font-bold font-heading text-text-primary leading-tight">
             Rent Books,
             <br />
-            Read More
+            Save Money
+            <br />
+            & Read More
           </h1>
           <p className="text-lg text-text-secondary leading-relaxed">
             Discover thousands of books available for rent. Save money, save
