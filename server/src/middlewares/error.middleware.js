@@ -66,7 +66,49 @@ const errorHandler = (err, req, res, next) => {
     });
   }
 
-  // Database errors
+  // Database connection errors
+  if (err.code === "ENOTFOUND") {
+    return res.status(503).json({
+      success: false,
+      message: "Database connection failed. Please try again later.",
+      ...(process.env.NODE_ENV === "development" && {
+        error: "Database hostname not found",
+      }),
+    });
+  }
+
+  if (err.code === "ECONNREFUSED") {
+    return res.status(503).json({
+      success: false,
+      message: "Database is unavailable. Please try again later.",
+      ...(process.env.NODE_ENV === "development" && {
+        error: "Connection refused by database server",
+      }),
+    });
+  }
+
+  if (err.message && err.message.includes("Tenant or user not found")) {
+    return res.status(503).json({
+      success: false,
+      message: "Database connection error. Please try again later.",
+      ...(process.env.NODE_ENV === "development" && {
+        error: "Supabase tenant not found - check connection string mode",
+      }),
+    });
+  }
+
+  // Drizzle ORM errors
+  if (err.name === "DrizzleQueryError") {
+    return res.status(503).json({
+      success: false,
+      message: "Database query failed. Please try again later.",
+      ...(process.env.NODE_ENV === "development" && {
+        error: err.message,
+      }),
+    });
+  }
+
+  // Database constraint errors
   if (err.code === "23505") {
     // Unique constraint violation
     return res.status(409).json({

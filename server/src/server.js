@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
+const morgan = require("morgan");
 require("dotenv/config");
 
 // Routes
@@ -10,6 +11,8 @@ const routes = require("./routes/index.js");
 const { errorHandler, notFound } = require("./middlewares/error.middleware.js");
 
 const app = express();
+
+app.use(morgan("dev"));
 
 // Middleware
 app.use(
