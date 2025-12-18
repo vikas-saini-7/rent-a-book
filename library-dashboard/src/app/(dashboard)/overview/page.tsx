@@ -159,10 +159,12 @@ const StatCard = ({
   value: string;
   hint: string;
 }) => (
-  <div className="border border-border rounded-xl bg-bg-card p-4 shadow-sm">
-    <p className="text-sm text-text-muted mb-2">{title}</p>
-    <p className="text-2xl font-semibold text-text-primary">{value}</p>
-    <p className="text-sm text-text-secondary mt-1">{hint}</p>
+  <div className="border border-border rounded-xl bg-gradient-to-br from-bg-card to-gray-50/30 p-5 shadow-sm hover:shadow-md transition-shadow duration-200">
+    <p className="text-xs font-semibold text-text-muted uppercase tracking-wide mb-2">
+      {title}
+    </p>
+    <p className="text-3xl font-bold text-text-primary">{value}</p>
+    <p className="text-sm text-text-secondary mt-1.5">{hint}</p>
   </div>
 );
 
@@ -218,11 +220,11 @@ export default function OverviewPage() {
         />
       </section>
 
-      <section className="border border-border rounded-xl bg-bg-card p-4 shadow-sm">
-        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between mb-4">
+      <section className="border border-border rounded-2xl bg-bg-card p-6 shadow-sm">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-5">
           <div>
-            <h2 className="text-lg font-heading text-text-primary">Rentals</h2>
-            <p className="text-sm text-text-muted">
+            <h2 className="text-xl font-bold text-text-primary">Rentals</h2>
+            <p className="text-sm text-text-muted mt-0.5">
               Track pickups, returns, and dues.
             </p>
           </div>
@@ -231,10 +233,10 @@ export default function OverviewPage() {
               <button
                 key={key}
                 onClick={() => setStatusFilter(key as "all" | RentalStatus)}
-                className={`px-3 py-1.5 text-sm rounded-lg border transition-colors ${
+                className={`px-3.5 py-1.5 text-sm font-medium rounded-lg transition-all duration-200 ${
                   statusFilter === key
-                    ? "border-primary bg-primary/10 text-primary"
-                    : "border-border text-text-secondary hover:border-text-muted"
+                    ? "bg-primary text-white shadow-sm"
+                    : "bg-bg-main text-text-secondary hover:bg-gray-100"
                 }`}
               >
                 {key === "all" ? "All" : statusCopy[key as RentalStatus].label}
@@ -243,40 +245,52 @@ export default function OverviewPage() {
           </div>
         </div>
 
-        <div className="overflow-hidden rounded-lg border border-border">
+        <div className="overflow-hidden rounded-xl border border-border">
           <table className="w-full text-sm">
-            <thead className="bg-[#f7f4ef] text-text-secondary">
+            <thead className="bg-gradient-to-r from-gray-50 to-gray-100/50 text-text-secondary">
               <tr>
-                <th className="px-4 py-3 text-left font-medium">Rental ID</th>
-                <th className="px-4 py-3 text-left font-medium">Member</th>
-                <th className="px-4 py-3 text-left font-medium">Book</th>
-                <th className="px-4 py-3 text-left font-medium">Status</th>
-                <th className="px-4 py-3 text-left font-medium">Due</th>
-                <th className="px-4 py-3 text-right font-medium">Value</th>
+                <th className="px-5 py-3.5 text-left font-semibold text-xs uppercase tracking-wide">
+                  Rental ID
+                </th>
+                <th className="px-5 py-3.5 text-left font-semibold text-xs uppercase tracking-wide">
+                  Member
+                </th>
+                <th className="px-5 py-3.5 text-left font-semibold text-xs uppercase tracking-wide">
+                  Book
+                </th>
+                <th className="px-5 py-3.5 text-left font-semibold text-xs uppercase tracking-wide">
+                  Status
+                </th>
+                <th className="px-5 py-3.5 text-left font-semibold text-xs uppercase tracking-wide">
+                  Due
+                </th>
+                <th className="px-5 py-3.5 text-right font-semibold text-xs uppercase tracking-wide">
+                  Value
+                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
               {filteredRentals.map((rental) => (
                 <tr
                   key={rental.id}
-                  className="hover:bg-bg-main/60 transition-colors"
+                  className="hover:bg-bg-main transition-colors duration-150"
                 >
-                  <td className="px-4 py-3 font-medium text-text-primary">
+                  <td className="px-5 py-4 font-semibold text-text-primary">
                     {rental.id}
                   </td>
-                  <td className="px-4 py-3 text-text-secondary">
+                  <td className="px-5 py-4 text-text-secondary">
                     {rental.member}
                   </td>
-                  <td className="px-4 py-3 text-text-secondary">
+                  <td className="px-5 py-4 text-text-secondary">
                     {rental.book}
                   </td>
-                  <td className="px-4 py-3">
+                  <td className="px-5 py-4">
                     <StatusPill status={rental.status} />
                   </td>
-                  <td className="px-4 py-3 text-text-secondary">
+                  <td className="px-5 py-4 text-text-secondary">
                     {rental.dueDate} {rental.daysLeft < 0 ? "(overdue)" : ""}
                   </td>
-                  <td className="px-4 py-3 text-right text-text-primary">
+                  <td className="px-5 py-4 text-right font-semibold text-text-primary">
                     {rental.value > 0 ? `₹${rental.value}` : "-"}
                   </td>
                 </tr>
@@ -286,36 +300,46 @@ export default function OverviewPage() {
         </div>
       </section>
 
-      <section className="border border-border rounded-xl bg-bg-card p-4 shadow-sm">
-        <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between mb-3">
+      <section className="border border-border rounded-2xl bg-bg-card p-6 shadow-sm">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-5">
           <div>
-            <h2 className="text-lg font-heading text-text-primary">
-              Inventory
-            </h2>
-            <p className="text-sm text-text-muted">
+            <h2 className="text-xl font-bold text-text-primary">Inventory</h2>
+            <p className="text-sm text-text-muted mt-0.5">
               Spot shortages and holds quickly.
             </p>
           </div>
           <div className="flex gap-2 text-sm text-text-secondary flex-wrap">
-            <span className="px-3 py-1.5 rounded-lg border border-border bg-bg-main">
+            <span className="px-3 py-1.5 rounded-lg bg-amber-50 text-amber-700 font-medium">
               Low stock &lt; 3 copies
             </span>
-            <span className="px-3 py-1.5 rounded-lg border border-border bg-bg-main">
+            <span className="px-3 py-1.5 rounded-lg bg-blue-50 text-blue-700 font-medium">
               Holds included
             </span>
           </div>
         </div>
 
-        <div className="overflow-hidden rounded-lg border border-border">
+        <div className="overflow-hidden rounded-xl border border-border">
           <table className="w-full text-sm">
-            <thead className="bg-[#f7f4ef] text-text-secondary">
+            <thead className="bg-gradient-to-r from-gray-50 to-gray-100/50 text-text-secondary">
               <tr>
-                <th className="px-4 py-3 text-left font-medium">Title</th>
-                <th className="px-4 py-3 text-left font-medium">Author</th>
-                <th className="px-4 py-3 text-left font-medium">Category</th>
-                <th className="px-4 py-3 text-right font-medium">Available</th>
-                <th className="px-4 py-3 text-right font-medium">On hold</th>
-                <th className="px-4 py-3 text-right font-medium">Total</th>
+                <th className="px-5 py-3.5 text-left font-semibold text-xs uppercase tracking-wide">
+                  Title
+                </th>
+                <th className="px-5 py-3.5 text-left font-semibold text-xs uppercase tracking-wide">
+                  Author
+                </th>
+                <th className="px-5 py-3.5 text-left font-semibold text-xs uppercase tracking-wide">
+                  Category
+                </th>
+                <th className="px-5 py-3.5 text-right font-semibold text-xs uppercase tracking-wide">
+                  Available
+                </th>
+                <th className="px-5 py-3.5 text-right font-semibold text-xs uppercase tracking-wide">
+                  On hold
+                </th>
+                <th className="px-5 py-3.5 text-right font-semibold text-xs uppercase tracking-wide">
+                  Total
+                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
@@ -324,30 +348,30 @@ export default function OverviewPage() {
                 return (
                   <tr
                     key={item.id}
-                    className={`hover:bg-bg-main/60 transition-colors ${
-                      isLow ? "bg-red-50/60" : ""
+                    className={`hover:bg-bg-main transition-colors duration-150 ${
+                      isLow ? "bg-red-50/40" : ""
                     }`}
                   >
-                    <td className="px-4 py-3 font-medium text-text-primary">
+                    <td className="px-5 py-4 font-semibold text-text-primary">
                       {item.title}
                     </td>
-                    <td className="px-4 py-3 text-text-secondary">
+                    <td className="px-5 py-4 text-text-secondary">
                       {item.author}
                     </td>
-                    <td className="px-4 py-3 text-text-secondary">
+                    <td className="px-5 py-4 text-text-secondary">
                       {item.category}
                     </td>
                     <td
-                      className={`px-4 py-3 text-right ${
-                        isLow ? "text-red-700" : "text-text-primary"
+                      className={`px-5 py-4 text-right font-semibold ${
+                        isLow ? "text-red-600" : "text-text-primary"
                       }`}
                     >
                       {item.available}
                     </td>
-                    <td className="px-4 py-3 text-right text-text-secondary">
+                    <td className="px-5 py-4 text-right text-text-secondary">
                       {item.onHold}
                     </td>
-                    <td className="px-4 py-3 text-right text-text-secondary">
+                    <td className="px-5 py-4 text-right text-text-secondary">
                       {item.total}
                     </td>
                   </tr>

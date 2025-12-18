@@ -14,45 +14,25 @@ const navItems = [
 
 const pageMeta: Record<string, { title: string; desc: string }> = {
   "/overview": {
-    title: "Dashboard Overview",
-    desc: "Snapshot of rentals, collection health, and quick actions.",
+    title: "Overview",
+    desc: "Quick view of your library activity",
   },
   "/rentals": {
     title: "Rentals",
-    desc: "Track pickups, returns, and dues in real time.",
+    desc: "Manage active and past rentals",
   },
   "/collection": {
-    title: "Collection",
-    desc: "Manage stock, holds, and condition of every copy.",
+    title: "Books",
+    desc: "View and manage your book inventory",
   },
   "/payments": {
     title: "Payments",
-    desc: "Reconcile rental fees, deposits, and refunds.",
+    desc: "Track member payments and fees",
   },
   "/settings": {
     title: "Settings",
-    desc: "Branch preferences, delivery, notifications, and users.",
+    desc: "Manage library preferences",
   },
-};
-
-const pageActions: Record<string, { label: string; secondary?: boolean }[]> = {
-  "/overview": [
-    { label: "Export snapshot", secondary: true },
-    { label: "Add book" },
-  ],
-  "/rentals": [
-    { label: "New rental" },
-    { label: "Mark returned", secondary: true },
-  ],
-  "/collection": [
-    { label: "Add book" },
-    { label: "Adjust stock", secondary: true },
-  ],
-  "/payments": [
-    { label: "Record payment" },
-    { label: "Export CSV", secondary: true },
-  ],
-  "/settings": [{ label: "Save changes" }],
 };
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {
@@ -66,7 +46,6 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
     );
   }, [pathname]);
 
-  const actions = pageActions[current.href] ?? pageActions["/overview"];
   const meta = pageMeta[current.href] ?? pageMeta["/overview"];
 
   const handleLogout = async () => {
@@ -77,10 +56,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-bg-main">
-        <div className="text-center">
-          <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-text-secondary">Loading...</p>
-        </div>
+        <p className="text-text-secondary">Loading...</p>
       </div>
     );
   }
@@ -95,28 +71,30 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
 
   return (
     <div className="min-h-screen lg:h-screen lg:overflow-hidden flex bg-bg-main text-text-primary">
-      <aside className="hidden lg:flex lg:w-64 border-r border-border bg-bg-card p-4 flex-col gap-6 lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto">
+      <aside className="hidden lg:flex lg:w-64 border-r border-border bg-bg-card p-6 flex-col gap-8 lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto">
         <div className="flex items-center gap-3">
-          <div className="h-10 w-10 rounded-lg bg-primary text-white flex items-center justify-center font-heading text-lg">
+          <div className="h-10 w-10 rounded-xl bg-linear-to-br from-primary to-accent-secondary text-white flex items-center justify-center font-semibold text-lg shadow-lg shadow-primary/20">
             R
           </div>
           <div>
-            <p className="text-lg font-heading text-text-primary">RentABook</p>
-            <p className="text-xs text-text-muted">Library console</p>
+            <p className="text-lg font-semibold text-text-primary">RentABook</p>
+            <p className="text-xs text-text-muted font-medium">
+              Library Console
+            </p>
           </div>
         </div>
 
-        <nav className="space-y-1 text-sm">
+        <nav className="space-y-1.5 text-sm">
           {navItems.map((item) => {
             const active = current.href === item.href;
             return (
               <Link
                 key={item.href}
                 href={item.href}
-                className={`block w-full px-3 py-2 rounded-lg border transition-colors ${
+                className={`block w-full px-4 py-2.5 rounded-xl font-medium transition-all duration-200 ${
                   active
-                    ? "border-primary bg-primary/10 text-primary"
-                    : "border-transparent hover:border-border text-text-secondary"
+                    ? "bg-primary text-white shadow-md shadow-primary/25"
+                    : "text-text-secondary hover:bg-bg-main hover:text-text-primary"
                 }`}
               >
                 {item.label}
@@ -126,15 +104,15 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
         </nav>
 
         <div className="mt-auto space-y-3 text-sm">
-          <div className="flex items-center gap-3 px-3 py-2 rounded-lg border border-border bg-bg-main">
-            <div className="h-10 w-10 rounded-md bg-primary/10 text-primary border border-primary/20 flex items-center justify-center font-semibold">
+          <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-linear-to-br from-bg-main to-gray-50 border border-border">
+            <div className="h-10 w-10 rounded-lg bg-linear-to-br from-primary/10 to-accent-secondary/10 text-primary border border-primary/20 flex items-center justify-center font-bold text-sm shadow-sm">
               {libraryInitials}
             </div>
             <div className="leading-tight overflow-hidden">
               <p className="text-sm font-semibold text-text-primary truncate">
                 {library?.name}
               </p>
-              <p className="text-xs text-text-secondary truncate">
+              <p className="text-xs text-text-muted truncate">
                 {library?.email}
               </p>
             </div>
@@ -143,13 +121,13 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
           <div className="flex gap-2">
             <Link
               href="/settings"
-              className="flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-lg border border-border bg-bg-main text-sm text-text-primary hover:border-text-secondary"
+              className="flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-text-secondary hover:bg-bg-main hover:text-text-primary transition-all duration-200"
             >
               Settings
             </Link>
             <button
               onClick={handleLogout}
-              className="flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-lg border border-border bg-bg-main text-sm text-text-primary hover:border-error hover:text-error"
+              className="flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-text-secondary hover:bg-red-50 hover:text-error transition-all duration-200"
             >
               Logout
             </button>
@@ -158,31 +136,15 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
       </aside>
 
       <div className="flex-1 flex flex-col min-w-0 lg:overflow-hidden">
-        <header className="sticky top-0 z-10 bg-bg-card border-b border-border px-4 py-3 flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
-          <div>
-            <h1 className="text-2xl font-heading text-text-primary">
-              {meta.title}
-            </h1>
-            <p className="text-sm text-text-secondary">{meta.desc}</p>
-          </div>
-          <div className="flex gap-2 flex-wrap justify-end">
-            {actions.map((action) => (
-              <button
-                key={action.label}
-                className={`px-4 py-2 rounded-lg transition-colors border ${
-                  action.secondary
-                    ? "border-border text-text-primary hover:border-text-secondary"
-                    : "bg-primary text-white border-primary hover:bg-primary-hover"
-                }`}
-              >
-                {action.label}
-              </button>
-            ))}
-          </div>
+        <header className="sticky top-0 z-10 bg-bg-card/80 backdrop-blur-xl border-b border-border px-6 py-4">
+          <h1 className="text-2xl font-bold text-text-primary tracking-tight">
+            {meta.title}
+          </h1>
+          <p className="text-sm text-text-muted mt-1">{meta.desc}</p>
         </header>
 
-        <main className="p-4 md:p-6 flex-1 overflow-y-auto">
-          <div className="max-w-6xl mx-auto space-y-6">{children}</div>
+        <main className="p-6 md:p-8 flex-1 overflow-y-auto">
+          <div className="max-w-7xl mx-auto space-y-6">{children}</div>
         </main>
       </div>
     </div>

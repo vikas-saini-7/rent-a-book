@@ -30,59 +30,61 @@ const items = [
 export default function InventoryPage() {
   return (
     <div className="space-y-4">
-      <section className="border border-border rounded-xl bg-bg-card p-4 shadow-sm">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-3">
-          <div>
-            <h1 className="text-lg font-heading text-text-primary">
-              Collection
-            </h1>
-            <p className="text-sm text-text-muted">
-              Top movers, low stock, and holds.
-            </p>
-          </div>
-          <div className="flex gap-2 flex-wrap">
-            <button className="px-3 py-1.5 rounded-lg border border-border text-sm text-text-secondary">
-              Add book
-            </button>
-            <button className="px-3 py-1.5 rounded-lg border border-border text-sm text-text-secondary">
-              Upload CSV
-            </button>
-          </div>
+      <section className="border border-border rounded-2xl bg-bg-card p-6 shadow-sm">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-5">
+          <h2 className="text-lg font-semibold text-text-primary">
+            Your Books
+          </h2>
+          <button className="px-4 py-2 rounded-lg bg-primary text-white font-medium text-sm hover:bg-primary-hover shadow-md shadow-primary/25 transition-all duration-200">
+            Add Book
+          </button>
         </div>
-        <div className="overflow-hidden rounded-lg border border-border">
+        <div className="overflow-hidden rounded-xl border border-border">
           <table className="w-full text-sm">
-            <thead className="bg-[#f7f4ef] text-text-secondary">
+            <thead className="bg-gradient-to-r from-gray-50 to-gray-100/50 text-text-secondary">
               <tr>
-                <th className="px-4 py-3 text-left font-medium">Title</th>
-                <th className="px-4 py-3 text-left font-medium">Author</th>
-                <th className="px-4 py-3 text-left font-medium">Category</th>
-                <th className="px-4 py-3 text-right font-medium">Available</th>
-                <th className="px-4 py-3 text-right font-medium">On hold</th>
-                <th className="px-4 py-3 text-right font-medium">Total</th>
+                <th className="px-5 py-3.5 text-left font-semibold text-xs uppercase tracking-wide">
+                  Title
+                </th>
+                <th className="px-5 py-3.5 text-left font-semibold text-xs uppercase tracking-wide">
+                  Author
+                </th>
+                <th className="px-5 py-3.5 text-left font-semibold text-xs uppercase tracking-wide">
+                  Category
+                </th>
+                <th className="px-5 py-3.5 text-right font-semibold text-xs uppercase tracking-wide">
+                  Available
+                </th>
+                <th className="px-5 py-3.5 text-right font-semibold text-xs uppercase tracking-wide">
+                  On hold
+                </th>
+                <th className="px-5 py-3.5 text-right font-semibold text-xs uppercase tracking-wide">
+                  Total
+                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
               {items.map((item) => (
                 <tr
                   key={item.title}
-                  className="hover:bg-bg-main/60 transition-colors"
+                  className="hover:bg-bg-main transition-colors duration-150"
                 >
-                  <td className="px-4 py-3 font-medium text-text-primary">
+                  <td className="px-5 py-4 font-semibold text-text-primary">
                     {item.title}
                   </td>
-                  <td className="px-4 py-3 text-text-secondary">
+                  <td className="px-5 py-4 text-text-secondary">
                     {item.author}
                   </td>
-                  <td className="px-4 py-3 text-text-secondary">
+                  <td className="px-5 py-4 text-text-secondary">
                     {item.category}
                   </td>
-                  <td className="px-4 py-3 text-right text-text-primary">
+                  <td className="px-5 py-4 text-right font-semibold text-text-primary">
                     {item.available}
                   </td>
-                  <td className="px-4 py-3 text-right text-text-secondary">
+                  <td className="px-5 py-4 text-right text-text-secondary">
                     {item.onHold}
                   </td>
-                  <td className="px-4 py-3 text-right text-text-secondary">
+                  <td className="px-5 py-4 text-right text-text-secondary">
                     {item.total}
                   </td>
                 </tr>

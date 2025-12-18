@@ -29,24 +29,13 @@ export default function PaymentsPage() {
     <div className="space-y-4">
       <section className="border border-border rounded-xl bg-bg-card p-4 shadow-sm">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-3">
-          <div>
-            <h1 className="text-lg font-heading text-text-primary">Payments</h1>
-            <p className="text-sm text-text-muted">
-              Memberships and fines tracking.
-            </p>
-          </div>
-          <div className="flex gap-2 flex-wrap">
-            <button className="px-3 py-1.5 rounded-lg border border-border text-sm text-text-secondary">
-              Reconcile
-            </button>
-            <button className="px-3 py-1.5 rounded-lg border border-border text-sm text-text-secondary">
-              Download report
-            </button>
-          </div>
+          <h2 className="text-lg font-semibold text-text-primary">
+            Payment History
+          </h2>
         </div>
         <div className="overflow-hidden rounded-lg border border-border">
           <table className="w-full text-sm">
-            <thead className="bg-[#f7f4ef] text-text-secondary">
+            <thead className="bg-gradient-to-r from-gray-50 to-gray-100/50 text-text-secondary">
               <tr>
                 <th className="px-4 py-3 text-left font-medium">Payment ID</th>
                 <th className="px-4 py-3 text-left font-medium">Member</th>

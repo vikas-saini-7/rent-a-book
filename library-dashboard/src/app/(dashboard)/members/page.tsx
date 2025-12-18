@@ -40,7 +40,7 @@ export default function MembersPage() {
         </div>
         <div className="overflow-hidden rounded-lg border border-border">
           <table className="w-full text-sm">
-            <thead className="bg-[#f7f4ef] text-text-secondary">
+            <thead className="bg-gradient-to-r from-gray-50 to-gray-100/50 text-text-secondary">
               <tr>
                 <th className="px-4 py-3 text-left font-medium">Name</th>
                 <th className="px-4 py-3 text-left font-medium">Tier</th>

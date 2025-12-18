@@ -39,19 +39,20 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-bg-main px-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-bg-main via-blue-50/40 to-cyan-50/30 px-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-semibold text-text-primary mb-2">
+          <div className="inline-flex h-16 w-16 rounded-2xl bg-gradient-to-br from-primary to-accent-secondary text-white items-center justify-center font-bold text-2xl shadow-xl shadow-blue-900/20 mb-4">
+            R
+          </div>
+          <h1 className="text-3xl font-bold text-text-primary mb-2">
             Library Dashboard
           </h1>
-          <p className="text-text-secondary">Sign in to manage your library</p>
+          <p className="text-text-muted">Sign in to manage your library</p>
         </div>
 
-        <div className="bg-bg-card rounded-lg shadow-sm border border-border p-8">
-          <h2 className="text-2xl font-semibold text-text-primary mb-6">
-            Login
-          </h2>
+        <div className="bg-bg-card rounded-2xl shadow-xl border border-border p-8">
+          <h2 className="text-2xl font-bold text-text-primary mb-6">Login</h2>
 
           {error && (
             <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-md">
@@ -63,7 +64,7 @@ export default function LoginPage() {
             <div>
               <label
                 htmlFor="email"
-                className="block text-sm font-medium text-text-primary mb-2"
+                className="block text-sm font-semibold text-text-primary mb-2"
               >
                 Email
               </label>
@@ -74,7 +75,7 @@ export default function LoginPage() {
                 value={formData.email}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-3 border border-border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
+                className="w-full px-4 py-3 border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all bg-bg-main/30"
                 placeholder="library@example.com"
               />
             </div>
@@ -82,7 +83,7 @@ export default function LoginPage() {
             <div>
               <label
                 htmlFor="password"
-                className="block text-sm font-medium text-text-primary mb-2"
+                className="block text-sm font-semibold text-text-primary mb-2"
               >
                 Password
               </label>
@@ -93,7 +94,7 @@ export default function LoginPage() {
                 value={formData.password}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-3 border border-border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
+                className="w-full px-4 py-3 border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all bg-bg-main/30"
                 placeholder="Enter your password"
               />
             </div>
@@ -101,7 +102,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-primary hover:bg-primary-hover text-white font-medium py-3 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-primary hover:bg-primary-hover text-white font-semibold py-3 rounded-lg transition-all duration-200 shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? "Signing in..." : "Sign In"}
             </button>
@@ -112,7 +113,7 @@ export default function LoginPage() {
               Don't have an account?{" "}
               <Link
                 href="/register"
-                className="text-primary hover:text-primary-hover font-medium"
+                className="text-primary hover:text-primary-hover font-semibold"
               >
                 Register your library
               </Link>
