@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Playfair_Display, Lexend } from "next/font/google";
 import "./globals.css";
+import { LibraryAuthProvider } from "@/contexts/LibraryAuthContext";
 
 // const playfairDisplay = Playfair_Display({
 //   variable: "--font-playfair-display",
@@ -25,10 +26,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={` ${lexend.variable} antialiased font-body`}
-      >
-        {children}
+      <body className={` ${lexend.variable} antialiased font-body`}>
+        <LibraryAuthProvider>{children}</LibraryAuthProvider>
       </body>
     </html>
   );

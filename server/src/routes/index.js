@@ -9,8 +9,8 @@ const addressRoutes = require("./address.routes.js");
 
 // library routes
 const libraryAuthRoutes = require("./library-auth.routes.js");
-const libraryAdminRoutes = require("./library-profile.routes.js");
-const libraryBooksRoutes = require("./library-books.routes.js");
+// const libraryProfileRoutes = require("./library-profile.routes.js");
+// const libraryBooksRoutes = require("./library-books.routes.js");
 
 //////////////////
 // Platform Routes
@@ -24,7 +24,7 @@ router.use("/addresses", addressRoutes);
 // Library Management Routes
 //////////////////
 router.use("/library/auth", libraryAuthRoutes);
-router.use("/library/profile", libraryAdminRoutes);
-router.use("/library/books", libraryBooksRoutes);
+// router.use("/library/profile", libraryProfileRoutes);
+// router.use("/library/books", libraryBooksRoutes);
 
 module.exports = router;

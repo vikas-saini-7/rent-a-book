@@ -161,10 +161,20 @@ async function seed() {
     // ==================== LIBRARIES ====================
     console.log("🏛️  Seeding libraries...");
     const libraryPassword = await bcrypt.hash("library123", 10);
+    // Helper function to generate slug
+    const generateSlug = (name) => {
+      return name
+        .toLowerCase()
+        .trim()
+        .replace(/[^\w\s-]/g, "")
+        .replace(/[\s_-]+/g, "-")
+        .replace(/^-+|-+$/g, "");
+    };
+
     const librariesData = [
       {
         name: "Central Library Mumbai",
-        slug: "central-library-mumbai",
+        slug: generateSlug("Central Library Mumbai"),
         description:
           "The largest public library in Mumbai with an extensive collection of books across all genres.",
         imageUrl: "https://example.com/libraries/mumbai-central.jpg",
@@ -191,7 +201,7 @@ async function seed() {
       },
       {
         name: "Delhi Public Library",
-        slug: "delhi-public-library",
+        slug: generateSlug("Delhi Public Library"),
         description:
           "One of the oldest and most prestigious libraries in the capital city.",
         imageUrl: "https://example.com/libraries/delhi-public.jpg",
@@ -218,7 +228,7 @@ async function seed() {
       },
       {
         name: "Bangalore Central Library",
-        slug: "bangalore-central-library",
+        slug: generateSlug("Bangalore Central Library"),
         description:
           "A modern library in the heart of India's tech hub with excellent tech and business book collections.",
         imageUrl: "https://example.com/libraries/bangalore-central.jpg",
@@ -245,7 +255,7 @@ async function seed() {
       },
       {
         name: "Chennai Book House",
-        slug: "chennai-book-house",
+        slug: generateSlug("Chennai Book House"),
         description:
           "A heritage library with a rich collection of Tamil and English literature.",
         imageUrl: "https://example.com/libraries/chennai-bookhouse.jpg",
@@ -272,7 +282,7 @@ async function seed() {
       },
       {
         name: "Kolkata Literary Hub",
-        slug: "kolkata-literary-hub",
+        slug: generateSlug("Kolkata Literary Hub"),
         description:
           "A cultural center and library celebrating Bengal's rich literary heritage.",
         imageUrl: "https://example.com/libraries/kolkata-literary.jpg",
@@ -294,6 +304,33 @@ async function seed() {
           friday: "10:00 AM - 8:00 PM",
           saturday: "10:00 AM - 6:00 PM",
           sunday: "11:00 AM - 4:00 PM",
+        }),
+        isActive: true,
+      },
+      {
+        name: "Darkroom Library",
+        slug: generateSlug("Darkroom Library"),
+        description:
+          "A unique library specializing in photography, art, and visual culture with a curated collection.",
+        imageUrl: "https://example.com/libraries/darkroom-library.jpg",
+        addressLine1: "89 Brigade Road",
+        addressLine2: "Near Residency Road",
+        city: "Bangalore",
+        state: "Karnataka",
+        postalCode: "560025",
+        country: "India",
+        phone: "+91-80-67890123",
+        email: "info@darkroomlibrary.in",
+        password: libraryPassword,
+        status: "approved",
+        operatingHours: JSON.stringify({
+          monday: "10:00 AM - 8:00 PM",
+          tuesday: "10:00 AM - 8:00 PM",
+          wednesday: "10:00 AM - 8:00 PM",
+          thursday: "10:00 AM - 8:00 PM",
+          friday: "10:00 AM - 8:00 PM",
+          saturday: "11:00 AM - 9:00 PM",
+          sunday: "11:00 AM - 6:00 PM",
         }),
         isActive: true,
       },

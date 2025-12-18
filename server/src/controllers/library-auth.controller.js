@@ -12,32 +12,6 @@ const cookieOptions = {
   maxAge: 24 * 60 * 60 * 1000, // 1 day
 };
 
-// const libraries = pgTable("libraries", {
-//   id: serial("id").primaryKey(),
-//   // Login credentials
-//   email: varchar("email", { length: 255 }).notNull().unique(),
-//   password: text("password").notNull(),
-//   // Library details
-//   name: varchar("name", { length: 255 }).notNull(),
-//   slug: varchar("slug", { length: 255 }).notNull().unique(),
-//   description: text("description"),
-//   imageUrl: text("image_url"),
-//   // Location details
-//   addressLine1: text("address_line_1").notNull(),
-//   addressLine2: text("address_line_2"),
-//   city: varchar("city", { length: 100 }).notNull(),
-//   state: varchar("state", { length: 100 }).notNull(),
-//   postalCode: varchar("postal_code", { length: 20 }).notNull(),
-//   country: varchar("country", { length: 100 }).default("India"),
-//   // Contact
-//   phone: varchar("phone", { length: 20 }),
-//   // Operating hours (can be JSON or separate fields)
-//   operatingHours: text("operating_hours"), // JSON string
-//   isActive: boolean("is_active").default(true),
-//   createdAt: timestamp("created_at").defaultNow(),
-//   updatedAt: timestamp("updated_at").defaultNow(),
-// });
-
 exports.register = async (req, res, next) => {
   const {
     name,
@@ -73,8 +47,8 @@ exports.register = async (req, res, next) => {
 
   const { password: _, ...safeLibrary } = library;
 
-  res.cookie("accessToken", accessToken, cookieOptions);
-  res.cookie("refreshToken", refreshToken, cookieOptions);
+  res.cookie("libraryAccessToken", accessToken, cookieOptions);
+  res.cookie("libraryRefreshToken", refreshToken, cookieOptions);
 
   res.status(201).json({
     success: true,
@@ -93,8 +67,8 @@ exports.login = async (req, res, next) => {
 
   const { password: _, ...safeLibrary } = library;
 
-  res.cookie("accessToken", accessToken, cookieOptions);
-  res.cookie("refreshToken", refreshToken, cookieOptions);
+  res.cookie("libraryAccessToken", accessToken, cookieOptions);
+  res.cookie("libraryRefreshToken", refreshToken, cookieOptions);
 
   res.status(200).json({
     success: true,
@@ -104,12 +78,12 @@ exports.login = async (req, res, next) => {
 };
 
 exports.refresh = async (req, res, next) => {
-  const token = req.cookies["refreshToken"];
+  const token = req.cookies["libraryRefreshToken"];
 
   const { accessToken, refreshToken } = await refreshLibraryToken(token);
 
-  res.cookie("accessToken", accessToken, cookieOptions);
-  res.cookie("refreshToken", refreshToken, cookieOptions);
+  res.cookie("libraryAccessToken", accessToken, cookieOptions);
+  res.cookie("libraryRefreshToken", refreshToken, cookieOptions);
 
   res.status(200).json({
     success: true,
@@ -119,12 +93,12 @@ exports.refresh = async (req, res, next) => {
 };
 
 exports.logout = async (req, res, next) => {
-  const token = req.cookies["refreshToken"];
+  const token = req.cookies["libraryRefreshToken"];
 
   await logoutLibrary(token);
 
-  res.clearCookie("accessToken", cookieOptions);
-  res.clearCookie("refreshToken", cookieOptions);
+  res.clearCookie("libraryAccessToken", cookieOptions);
+  res.clearCookie("libraryRefreshToken", cookieOptions);
 
   res.status(200).json({
     success: true,

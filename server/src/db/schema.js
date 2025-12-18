@@ -127,7 +127,7 @@ const authors = pgTable("authors", {
 // ==================== LIBRARIES ====================
 
 const libraries = pgTable("libraries", {
-  id: serial("id").primaryKey(),
+  id: uuid("id").primaryKey().defaultRandom(),
   // Login credentials
   email: varchar("email", { length: 255 }).notNull().unique(),
   password: text("password").notNull(),
@@ -193,7 +193,7 @@ const books = pgTable("books", {
 
 const libraryBooks = pgTable("library_books", {
   id: serial("id").primaryKey(),
-  libraryId: integer("library_id")
+  libraryId: uuid("library_id")
     .notNull()
     .references(() => libraries.id, { onDelete: "cascade" }),
   bookId: integer("book_id")

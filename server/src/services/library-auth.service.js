@@ -1,8 +1,18 @@
 const bcrypt = require("bcrypt");
 const { db } = require("../db/index.js");
-const { users } = require("../db/schema.js");
+const { users, libraries } = require("../db/schema.js");
 const { eq } = require("drizzle-orm");
 const { AppError } = require("../middlewares/error.middleware.js");
+
+// Helper function to generate slug from name
+const generateSlug = (name) => {
+  return name
+    .toLowerCase()
+    .trim()
+    .replace(/[^\w\s-]/g, "") // Remove special characters
+    .replace(/[\s_-]+/g, "-") // Replace spaces and underscores with hyphens
+    .replace(/^-+|-+$/g, ""); // Remove leading/trailing hyphens
+};
 
 const {
   createAccessToken,
@@ -55,11 +65,27 @@ exports.registerLibrary = async ({
   // 2. Hash password
   const hashedPassword = await bcrypt.hash(password, 10);
 
-  // 3. Save library
+  // 3. Generate slug from name
+  let slug = generateSlug(name);
+
+  // Check if slug already exists and make it unique if needed
+  const existingSlug = await db
+    .select()
+    .from(libraries)
+    .where(eq(libraries.slug, slug))
+    .limit(1);
+
+  if (existingSlug.length > 0) {
+    // Append timestamp to make it unique
+    slug = `${slug}-${Date.now()}`;
+  }
+
+  // 4. Save library
   const [library] = await db
     .insert(libraries)
     .values({
       name,
+      slug,
       email,
       password: hashedPassword,
       description,
@@ -79,7 +105,7 @@ exports.registerLibrary = async ({
     throw new AppError("Failed to create library", 500);
   }
 
-  // 4. Create JWT tokens
+  // 5. Create JWT tokens
   const payload = {
     id: library.id,
     name: library.name,
@@ -140,7 +166,7 @@ exports.loginLibrary = async ({ email, password }) => {
  * @param {string} refreshToken - Refresh token (required)
  * @returns {Object} new accessToken and refreshToken
  */
-exports.refreshLibraryTokens = async (refreshToken) => {
+exports.refreshLibraryToken = async (refreshToken) => {
   if (!refreshToken) {
     throw new AppError("Refresh token is required", 400);
   }

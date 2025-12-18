@@ -78,7 +78,44 @@ const optionalAuthenticate = (req, res, next) => {
   }
 };
 
+const authenticateLibrary = (req, res, next) => {
+  try {
+    // Try to get token from Authorization header first
+    const authHeader = req.headers.authorization;
+    let token = null;
+
+    if (authHeader && authHeader.startsWith("Bearer ")) {
+      token = authHeader.substring(7);
+    }
+
+    // If not in header, try cookies
+    if (!token && req.cookies.libraryAccessToken) {
+      token = req.cookies.libraryAccessToken;
+    }
+
+    // If no token found
+    if (!token) {
+      throw new AppError("Library authentication required", 401);
+    }
+
+    // Verify token
+    const decoded = verifyAccessToken(token);
+    // Attach library info to request
+    req.library = {
+      id: decoded.id,
+      email: decoded.email,
+      role: decoded.role,
+    };
+
+    next();
+  } catch (error) {
+    // Pass the error to the error handler
+    next(error);
+  }
+};
+
 module.exports = {
   authenticate,
   optionalAuthenticate,
+  authenticateLibrary,
 };

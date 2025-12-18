@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { ReactNode, useMemo } from "react";
+import { useLibraryAuth } from "@/contexts/LibraryAuthContext";
 
 const navItems = [
   { label: "Overview", href: "/overview" },
@@ -54,14 +55,10 @@ const pageActions: Record<string, { label: string; secondary?: boolean }[]> = {
   "/settings": [{ label: "Save changes" }],
 };
 
-const libraryProfile = {
-  name: "Rosewood Public Library",
-  email: "ops@rosewoodlibrary.in",
-  initials: "RL",
-};
-
 export default function DashboardLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
+  const router = useRouter();
+  const { library, logout, loading } = useLibraryAuth();
 
   const current = useMemo(() => {
     return (
@@ -71,6 +68,30 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
 
   const actions = pageActions[current.href] ?? pageActions["/overview"];
   const meta = pageMeta[current.href] ?? pageMeta["/overview"];
+
+  const handleLogout = async () => {
+    await logout();
+    router.push("/login");
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-bg-main">
+        <div className="text-center">
+          <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-text-secondary">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  const libraryInitials =
+    library?.name
+      .split(" ")
+      .map((word) => word[0])
+      .join("")
+      .toUpperCase()
+      .slice(0, 2) || "LB";
 
   return (
     <div className="min-h-screen lg:h-screen lg:overflow-hidden flex bg-bg-main text-text-primary">
@@ -107,24 +128,32 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
         <div className="mt-auto space-y-3 text-sm">
           <div className="flex items-center gap-3 px-3 py-2 rounded-lg border border-border bg-bg-main">
             <div className="h-10 w-10 rounded-md bg-primary/10 text-primary border border-primary/20 flex items-center justify-center font-semibold">
-              {libraryProfile.initials}
+              {libraryInitials}
             </div>
-            <div className="leading-tight">
-              <p className="text-sm font-semibold text-text-primary">
-                {libraryProfile.name}
+            <div className="leading-tight overflow-hidden">
+              <p className="text-sm font-semibold text-text-primary truncate">
+                {library?.name}
               </p>
-              <p className="text-xs text-text-secondary">
-                {libraryProfile.email}
+              <p className="text-xs text-text-secondary truncate">
+                {library?.email}
               </p>
             </div>
           </div>
 
-          <Link
-            href="/settings"
-            className="flex items-center justify-center gap-2 px-3 py-2 rounded-lg border border-border bg-bg-main text-sm text-text-primary hover:border-text-secondary"
-          >
-            Settings
-          </Link>
+          <div className="flex gap-2">
+            <Link
+              href="/settings"
+              className="flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-lg border border-border bg-bg-main text-sm text-text-primary hover:border-text-secondary"
+            >
+              Settings
+            </Link>
+            <button
+              onClick={handleLogout}
+              className="flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-lg border border-border bg-bg-main text-sm text-text-primary hover:border-error hover:text-error"
+            >
+              Logout
+            </button>
+          </div>
         </div>
       </aside>
 
