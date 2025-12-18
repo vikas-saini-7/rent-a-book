@@ -128,6 +128,12 @@ const Header = () => {
               Collection
             </Link>
             <Link
+              href="/suggester"
+              className="text-text-secondary hover:text-primary transition-colors"
+            >
+              Suggester
+            </Link>
+            <Link
               href="/about"
               className="text-text-secondary hover:text-primary transition-colors"
             >

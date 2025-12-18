@@ -8,15 +8,15 @@ const TermsAndConditionsPage = () => {
   return (
     <>
       <Header />
-      <main className="min-h-screen bg-bg-base py-12">
+      <main className="min-h-screen bg-bg-main py-12">
         <div className="max-w-4xl mx-auto px-6">
-          <h1 className="text-4xl font-heading font-bold text-text-main mb-8">
+          <h1 className="text-4xl font-heading font-bold text-text-primary mb-8">
             Terms and Conditions
           </h1>
 
-          <div className="space-y-8 text-text-muted">
+          <div className="space-y-8 text-text-secondary">
             <section>
-              <h2 className="text-2xl font-heading font-semibold text-text-main mb-4">
+              <h2 className="text-2xl font-heading font-semibold text-text-primary mb-4">
                 1. Acceptance of Terms
               </h2>
               <p className="leading-relaxed">
@@ -28,7 +28,7 @@ const TermsAndConditionsPage = () => {
             </section>
 
             <section>
-              <h2 className="text-2xl font-heading font-semibold text-text-main mb-4">
+              <h2 className="text-2xl font-heading font-semibold text-text-primary mb-4">
                 2. Book Rental Service
               </h2>
               <p className="leading-relaxed mb-4">
@@ -45,7 +45,7 @@ const TermsAndConditionsPage = () => {
             </section>
 
             <section>
-              <h2 className="text-2xl font-heading font-semibold text-text-main mb-4">
+              <h2 className="text-2xl font-heading font-semibold text-text-primary mb-4">
                 3. User Responsibilities
               </h2>
               <p className="leading-relaxed mb-4">
@@ -61,7 +61,7 @@ const TermsAndConditionsPage = () => {
             </section>
 
             <section>
-              <h2 className="text-2xl font-heading font-semibold text-text-main mb-4">
+              <h2 className="text-2xl font-heading font-semibold text-text-primary mb-4">
                 4. Rental Policies
               </h2>
               <p className="leading-relaxed mb-4">
@@ -80,7 +80,7 @@ const TermsAndConditionsPage = () => {
             </section>
 
             <section>
-              <h2 className="text-2xl font-heading font-semibold text-text-main mb-4">
+              <h2 className="text-2xl font-heading font-semibold text-text-primary mb-4">
                 5. Payments and Fees
               </h2>
               <p className="leading-relaxed">
@@ -92,7 +92,7 @@ const TermsAndConditionsPage = () => {
             </section>
 
             <section>
-              <h2 className="text-2xl font-heading font-semibold text-text-main mb-4">
+              <h2 className="text-2xl font-heading font-semibold text-text-primary mb-4">
                 6. Limitation of Liability
               </h2>
               <p className="leading-relaxed">
@@ -104,7 +104,7 @@ const TermsAndConditionsPage = () => {
             </section>
 
             <section>
-              <h2 className="text-2xl font-heading font-semibold text-text-main mb-4">
+              <h2 className="text-2xl font-heading font-semibold text-text-primary mb-4">
                 7. Changes to Terms
               </h2>
               <p className="leading-relaxed">
@@ -116,7 +116,7 @@ const TermsAndConditionsPage = () => {
             </section>
 
             <section>
-              <h2 className="text-2xl font-heading font-semibold text-text-main mb-4">
+              <h2 className="text-2xl font-heading font-semibold text-text-primary mb-4">
                 8. Contact Information
               </h2>
               <p className="leading-relaxed">

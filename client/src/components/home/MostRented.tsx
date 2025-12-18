@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import BookCard from "./BookCard";
 import SectionTitle from "./SectionTitle";
+import { BookGridSkeleton } from "../loading";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
@@ -51,41 +52,24 @@ const MostRented = () => {
     return "Unknown Author";
   };
 
-  const displayBooks =
-    books.length > 0
-      ? books
-      : [
-          {
-            id: "1",
-            title: "The Great Gatsby",
-            author: "F. Scott Fitzgerald",
-            rentalPricePerWeek: 50,
-          },
-          {
-            id: "2",
-            title: "To Kill a Mockingbird",
-            author: "Harper Lee",
-            rentalPricePerWeek: 45,
-          },
-          {
-            id: "3",
-            title: "1984",
-            author: "George Orwell",
-            rentalPricePerWeek: 40,
-          },
-          {
-            id: "4",
-            title: "Pride and Prejudice",
-            author: "Jane Austen",
-            rentalPricePerWeek: 35,
-          },
-        ];
+  if (loading) {
+    return (
+      <section className="max-w-7xl mx-auto px-6 py-12">
+        <SectionTitle>Most Rented</SectionTitle>
+        <BookGridSkeleton count={4} />
+      </section>
+    );
+  }
+
+  if (books.length === 0) {
+    return null;
+  }
 
   return (
     <section className="max-w-7xl mx-auto px-6 py-12">
       <SectionTitle>Most Rented</SectionTitle>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {displayBooks.map((book) => (
+        {books.map((book) => (
           <BookCard
             key={book.id}
             id={book.id}

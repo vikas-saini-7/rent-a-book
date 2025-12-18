@@ -7,6 +7,7 @@ import {
   FeaturedBooks,
   MostRented,
   MostLoved,
+  SuggesterCTA,
   FAQSection,
 } from "../components/home";
 
@@ -20,6 +21,7 @@ export default function Home() {
         <FeaturedBooks />
         <MostRented />
         <MostLoved />
+        <SuggesterCTA />
         <FAQSection />
       </main>
 

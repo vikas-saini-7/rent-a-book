@@ -83,10 +83,10 @@ const FAQPage = () => {
   return (
     <>
       <Header />
-      <main className="min-h-screen bg-bg-base py-12">
+      <main className="min-h-screen bg-bg-main py-12">
         <div className="max-w-4xl mx-auto px-6">
           <div className="text-center mb-12">
-            <h1 className="text-4xl font-heading font-bold text-text-main mb-4">
+            <h1 className="text-4xl font-heading font-bold text-text-primary mb-4">
               Frequently Asked Questions
             </h1>
             <p className="text-text-muted text-lg">
@@ -102,9 +102,9 @@ const FAQPage = () => {
               >
                 <button
                   onClick={() => toggleFAQ(index)}
-                  className="w-full px-6 py-4 flex items-center justify-between text-left hover:bg-bg-base/50 transition-colors"
+                  className="w-full px-6 py-4 flex items-center justify-between text-left hover:bg-bg-main/50 transition-colors"
                 >
-                  <span className="font-medium text-text-main pr-4">
+                  <span className="font-medium text-text-primary pr-4">
                     {faq.question}
                   </span>
                   {openIndex === index ? (
@@ -115,7 +115,7 @@ const FAQPage = () => {
                 </button>
                 {openIndex === index && (
                   <div className="px-6 pb-4">
-                    <p className="text-text-muted leading-relaxed">
+                    <p className="text-text-secondary leading-relaxed">
                       {faq.answer}
                     </p>
                   </div>
@@ -125,16 +125,16 @@ const FAQPage = () => {
           </div>
 
           <div className="mt-12 text-center p-8 bg-bg-card border border-border rounded-lg">
-            <h2 className="text-2xl font-heading font-semibold text-text-main mb-4">
+            <h2 className="text-2xl font-heading font-semibold text-text-primary mb-4">
               Still have questions?
             </h2>
-            <p className="text-text-muted mb-6">
+            <p className="text-text-secondary mb-6">
               Can&apos;t find the answer you&apos;re looking for? Please reach
               out to our friendly support team.
             </p>
             <a
               href="mailto:support@rentabook.com"
-              className="inline-flex items-center justify-center px-6 py-3 bg-primary text-white font-medium rounded-lg hover:bg-primary/90 transition-colors"
+              className="inline-flex items-center justify-center px-6 py-3 bg-primary text-white font-medium rounded-lg hover:bg-primary-hover transition-colors"
             >
               Contact Support
             </a>
