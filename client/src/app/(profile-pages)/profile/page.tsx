@@ -12,7 +12,6 @@ import {
   IconEdit,
   IconCamera,
   IconWallet,
-  IconLoader2,
 } from "@tabler/icons-react";
 
 export default function ProfilePage() {
@@ -22,8 +21,50 @@ export default function ProfilePage() {
     return (
       <div className="min-h-screen flex flex-col">
         <Header />
-        <main className="flex-1 flex items-center justify-center">
-          <IconLoader2 className="animate-spin text-primary" size={40} />
+        <main className="flex-1 max-w-4xl mx-auto px-6 py-8 w-full">
+          <div className="h-9 w-48 bg-bg-card rounded animate-pulse mb-8" />
+
+          {/* Profile Header Placeholder */}
+          <div className="bg-bg-card border border-border rounded-lg p-6 mb-6">
+            <div className="flex flex-col sm:flex-row items-center gap-6">
+              <div className="w-24 h-24 rounded-full bg-bg-main animate-pulse" />
+              <div className="text-center sm:text-left flex-1 space-y-3">
+                <div className="h-6 w-48 bg-bg-main rounded animate-pulse mx-auto sm:mx-0" />
+                <div className="h-4 w-36 bg-bg-main rounded animate-pulse mx-auto sm:mx-0" />
+                <div className="h-4 w-32 bg-bg-main rounded animate-pulse mx-auto sm:mx-0" />
+              </div>
+              <div className="h-10 w-32 bg-bg-main rounded animate-pulse" />
+            </div>
+          </div>
+
+          {/* Wallet Balance Placeholder */}
+          <div className="bg-bg-card border border-border rounded-lg p-6 mb-6">
+            <div className="h-5 w-40 bg-bg-main rounded animate-pulse mb-4" />
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="bg-bg-main rounded-lg p-4 space-y-2">
+                  <div className="h-4 w-24 bg-bg-card rounded animate-pulse" />
+                  <div className="h-8 w-32 bg-bg-card rounded animate-pulse" />
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Profile Details Placeholder */}
+          <div className="bg-bg-card border border-border rounded-lg p-6">
+            <div className="h-5 w-44 bg-bg-main rounded animate-pulse mb-4" />
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              {[1, 2, 3, 4].map((i) => (
+                <div key={i} className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-bg-main animate-pulse" />
+                  <div className="flex-1 space-y-2">
+                    <div className="h-4 w-20 bg-bg-main rounded animate-pulse" />
+                    <div className="h-4 w-32 bg-bg-main rounded animate-pulse" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </main>
         <Footer />
       </div>

@@ -236,9 +236,15 @@ exports.getAllBooksService = async (filters) => {
 
 /**
  * Get a single book by ID with detailed information
+ * @param {string} bookId - Book ID (required)
+ * @param {string} location - Location/city (optional)
+ * @param {string} pincode - Postal code (optional)
+ * @returns {Object|null} Book object with library availability or null if not found
  */
-exports.getBookByIdService = async (bookId, options = {}) => {
-  const { location, pincode } = options;
+exports.getBookByIdService = async ({ bookId, location, pincode }) => {
+  if (!bookId) {
+    throw new Error("Book ID is required");
+  }
 
   const conditions = [eq(books.id, parseInt(bookId))];
 
@@ -325,9 +331,17 @@ exports.getBookByIdService = async (bookId, options = {}) => {
 
 /**
  * Get a single book by SLUG with detailed information including libraries
+ * @param {string} slug - Book slug (required)
+ * @param {string} location - Location/city (optional)
+ * @param {string} pincode - Postal code (optional)
+ * @returns {Object|null} Book object with libraries or null if not found
  */
-exports.getBookBySlugService = async (bookSlug, options = {}) => {
-  const { location, pincode } = options;
+exports.getBookBySlugService = async ({ slug, location, pincode }) => {
+  if (!slug) {
+    throw new Error("Book slug is required");
+  }
+
+  const bookSlug = slug;
 
   let query = db
     .select({
@@ -423,10 +437,12 @@ exports.getBookBySlugService = async (bookSlug, options = {}) => {
 
 /**
  * Get featured books
+ * @param {number} limit - Maximum number of books to return (default: 12)
+ * @param {string} location - Location/city (optional)
+ * @param {string} pincode - Postal code (optional)
+ * @returns {Array} Array of featured books
  */
-exports.getFeaturedBooksService = async (options = {}) => {
-  const { limit = 12, location, pincode } = options;
-
+exports.getFeaturedBooksService = async ({ limit = 12, location, pincode }) => {
   const conditions = [eq(books.isFeatured, true)];
 
   let query = db
@@ -479,10 +495,16 @@ exports.getFeaturedBooksService = async (options = {}) => {
 
 /**
  * Get most rented books
+ * @param {number} limit - Maximum number of books to return (default: 12)
+ * @param {string} location - Location/city (optional)
+ * @param {string} pincode - Postal code (optional)
+ * @returns {Array} Array of most rented books
  */
-exports.getMostRentedBooksService = async (options = {}) => {
-  const { limit = 12, location, pincode } = options;
-
+exports.getMostRentedBooksService = async ({
+  limit = 12,
+  location,
+  pincode,
+}) => {
   const conditions = [];
 
   let query = db
@@ -539,18 +561,28 @@ exports.getMostRentedBooksService = async (options = {}) => {
 
 /**
  * Get books by genre
+ * @param {string} slug - Genre slug (required)
+ * @param {number} page - Page number (default: 1)
+ * @param {number} limit - Items per page (default: 12)
+ * @param {string} sortBy - Sort option (default: relevance)
+ * @param {string} location - Location/city (optional)
+ * @param {string} pincode - Postal code (optional)
+ * @returns {Object} Object with books array and pagination info
  */
-exports.getBooksByGenreService = async (genreSlug, options = {}) => {
-  const {
-    page = 1,
-    limit = 12,
-    sortBy = "relevance",
-    location,
-    pincode,
-  } = options;
-  const offset = (page - 1) * limit;
+exports.getBooksByGenreService = async ({
+  slug,
+  page = 1,
+  limit = 12,
+  sortBy = "relevance",
+  location,
+  pincode,
+}) => {
+  if (!slug) {
+    throw new Error("Genre slug is required");
+  }
 
-  const conditions = [eq(genres.slug, genreSlug)];
+  const offset = (page - 1) * limit;
+  const conditions = [eq(genres.slug, slug)];
 
   let query = db
     .select({

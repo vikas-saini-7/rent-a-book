@@ -5,11 +5,14 @@ const { AppError } = require("../middlewares/error.middleware.js");
 
 /**
  * Get user profile by ID (excludes password)
- * @param {string} userId - User ID
+ * @param {string} userId - User ID (required)
  * @returns {Object} User profile without password
  * @throws {AppError} If user not found
  */
-const getProfileByIdService = async (userId) => {
+const getProfileByIdService = async ({ userId }) => {
+  if (!userId) {
+    throw new AppError("User ID is required", 400);
+  }
   const result = await db
     .select({
       id: users.id,
@@ -38,26 +41,23 @@ const getProfileByIdService = async (userId) => {
 
 /**
  * Update user profile (excludes sensitive fields like password, role, balances)
- * @param {string} userId - User ID
- * @param {Object} profileData - Profile data to update
+ * @param {string} userId - User ID (required)
+ * @param {string} fullName - User's full name (optional)
+ * @param {string} phone - User's phone number (optional)
+ * @param {string} avatarUrl - User's avatar URL (optional)
  * @returns {Object} Updated user profile without password
  * @throws {AppError} If user not found or validation fails
  */
-const updateProfileService = async (userId, profileData) => {
-  // Define allowed fields to update (map from client field names to DB field names)
-  const allowedFields = {
-    fullName: "fullName",
-    phone: "phone",
-    avatarUrl: "avatarUrl",
-  };
-
-  // Filter out non-allowed fields and map to DB field names
-  const updateData = {};
-  for (const [clientField, dbField] of Object.entries(allowedFields)) {
-    if (profileData[clientField] !== undefined) {
-      updateData[dbField] = profileData[clientField];
-    }
+const updateProfileService = async ({ userId, fullName, phone, avatarUrl }) => {
+  if (!userId) {
+    throw new AppError("User ID is required", 400);
   }
+
+  // Build update data object with only provided fields
+  const updateData = {};
+  if (fullName !== undefined) updateData.fullName = fullName;
+  if (phone !== undefined) updateData.phone = phone;
+  if (avatarUrl !== undefined) updateData.avatarUrl = avatarUrl;
 
   // Validate at least one field to update
   if (Object.keys(updateData).length === 0) {
@@ -96,11 +96,14 @@ const updateProfileService = async (userId, profileData) => {
 
 /**
  * Delete user account
- * @param {string} userId - User ID
+ * @param {string} userId - User ID (required)
  * @returns {Object} Deleted user info
  * @throws {AppError} If user not found
  */
-const deleteProfileService = async (userId) => {
+const deleteProfileService = async ({ userId }) => {
+  if (!userId) {
+    throw new AppError("User ID is required", 400);
+  }
   const result = await db.delete(users).where(eq(users.id, userId)).returning({
     id: users.id,
     email: users.email,

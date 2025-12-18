@@ -74,33 +74,23 @@ const {
 exports.getAllBooks = async (req, res, next) => {
   try {
     const {
-      // Search
       search,
-      // Location filters
       location,
       pincode,
       city,
-      // Sorting
-      sortBy = "relevance", // relevance, available_now, free_delivery, top_rated, new_arrivals, price_low, price_high
-      // Price filter
+      sortBy = "relevance",
       minPrice,
       maxPrice,
-      // Genre filter (can be multiple, comma-separated)
       genre,
-      // Language filter (can be multiple, comma-separated)
       language,
-      // Condition filter (can be multiple, comma-separated)
       condition,
-      // Rental period filter (can be multiple, comma-separated)
       rentalPeriod,
-      // Availability
       availableNow,
-      // Pagination
       page = 1,
       limit = 12,
     } = req.query;
 
-    const filters = {
+    const result = await getAllBooksService({
       search,
       location,
       pincode,
@@ -115,9 +105,7 @@ exports.getAllBooks = async (req, res, next) => {
       availableNow: availableNow === "true",
       page: parseInt(page),
       limit: parseInt(limit),
-    };
-
-    const result = await getAllBooksService(filters);
+    });
 
     res.status(200).json({
       success: true,
@@ -134,10 +122,10 @@ exports.getAllBooks = async (req, res, next) => {
  */
 exports.getBookById = async (req, res, next) => {
   try {
-    const { id } = req.params;
+    const { id: bookId } = req.params;
     const { location, pincode } = req.query;
 
-    const book = await getBookByIdService(id, { location, pincode });
+    const book = await getBookByIdService({ bookId, location, pincode });
 
     if (!book) {
       return res.status(404).json({
@@ -164,7 +152,7 @@ exports.getBookBySlug = async (req, res, next) => {
     const { slug } = req.params;
     const { location, pincode } = req.query;
 
-    const book = await getBookBySlugService(slug, { location, pincode });
+    const book = await getBookBySlugService({ slug, location, pincode });
 
     if (!book) {
       return res.status(404).json({
@@ -237,7 +225,8 @@ exports.getBooksByGenre = async (req, res, next) => {
     const { slug } = req.params;
     const { page = 1, limit = 12, sortBy, location, pincode } = req.query;
 
-    const result = await getBooksByGenreService(slug, {
+    const result = await getBooksByGenreService({
+      slug,
       page: parseInt(page),
       limit: parseInt(limit),
       sortBy,

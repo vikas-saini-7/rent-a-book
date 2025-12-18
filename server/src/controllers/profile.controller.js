@@ -9,8 +9,9 @@ const {
  * GET /api/profile
  */
 exports.getProfile = async (req, res) => {
-  // User ID comes from authenticate middleware (req.user.id)
-  const profile = await getProfileByIdService(req.user.id);
+  const { id: userId } = req.user;
+
+  const profile = await getProfileByIdService({ userId });
 
   res.status(200).json({
     success: true,
@@ -24,10 +25,15 @@ exports.getProfile = async (req, res) => {
  * PUT /api/profile
  */
 exports.updateProfile = async (req, res) => {
-  // User ID comes from authenticate middleware (req.user.id)
-  const profileData = req.body;
+  const { id: userId } = req.user;
+  const { fullName, phone, avatarUrl } = req.body;
 
-  const updatedProfile = await updateProfileService(req.user.id, profileData);
+  const updatedProfile = await updateProfileService({
+    userId,
+    fullName,
+    phone,
+    avatarUrl,
+  });
 
   res.status(200).json({
     success: true,
@@ -41,8 +47,9 @@ exports.updateProfile = async (req, res) => {
  * DELETE /api/profile
  */
 exports.deleteProfile = async (req, res) => {
-  // User ID comes from authenticate middleware (req.user.id)
-  await deleteProfileService(req.user.id);
+  const { id: userId } = req.user;
+
+  await deleteProfileService({ userId });
 
   // Clear cookies
   res.clearCookie("accessToken");

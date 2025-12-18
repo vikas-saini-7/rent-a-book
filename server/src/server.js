@@ -32,7 +32,7 @@ app.get("/", (req, res) => {
 // API Routes
 app.use("/api", routes);
 
-// Error handling
+// Globle Error handling
 app.use(notFound);
 app.use(errorHandler);
 

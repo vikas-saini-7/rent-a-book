@@ -7,8 +7,9 @@ const addressService = require("../services/address.service");
  */
 async function getAllAddresses(req, res, next) {
   try {
-    const userId = req.user.id;
-    const addresses = await addressService.getUserAddresses(userId);
+    const { id: userId } = req.user;
+
+    const addresses = await addressService.getUserAddresses({ userId });
 
     res.json({
       success: true,
@@ -26,10 +27,10 @@ async function getAllAddresses(req, res, next) {
  */
 async function getAddress(req, res, next) {
   try {
-    const userId = req.user.id;
-    const { id } = req.params;
+    const { id: userId } = req.user;
+    const { id: addressId } = req.params;
 
-    const address = await addressService.getAddressById(id, userId);
+    const address = await addressService.getAddressById({ addressId, userId });
 
     if (!address) {
       return res.status(404).json({
@@ -54,22 +55,27 @@ async function getAddress(req, res, next) {
  */
 async function createAddress(req, res, next) {
   try {
-    const userId = req.user.id;
-    const addressData = req.body;
+    const { id: userId } = req.user;
+    const {
+      addressLine1,
+      addressLine2,
+      city,
+      state,
+      postalCode,
+      country,
+      isDefault,
+    } = req.body;
 
-    // Validate required fields
-    const requiredFields = ["addressLine1", "city", "state", "postalCode"];
-
-    for (const field of requiredFields) {
-      if (!addressData[field]) {
-        return res.status(400).json({
-          success: false,
-          message: `${field} is required`,
-        });
-      }
-    }
-
-    const newAddress = await addressService.createAddress(userId, addressData);
+    const newAddress = await addressService.createAddress({
+      userId,
+      addressLine1,
+      addressLine2,
+      city,
+      state,
+      postalCode,
+      country,
+      isDefault,
+    });
 
     res.status(201).json({
       success: true,
@@ -88,24 +94,29 @@ async function createAddress(req, res, next) {
  */
 async function updateAddress(req, res, next) {
   try {
-    const userId = req.user.id;
-    const { id } = req.params;
-    const addressData = req.body;
+    const { id: userId } = req.user;
+    const { id: addressId } = req.params;
+    const {
+      addressLine1,
+      addressLine2,
+      city,
+      state,
+      postalCode,
+      country,
+      isDefault,
+    } = req.body;
 
-    // Verify address exists and belongs to user
-    const existingAddress = await addressService.getAddressById(id, userId);
-    if (!existingAddress) {
-      return res.status(404).json({
-        success: false,
-        message: "Address not found",
-      });
-    }
-
-    const updatedAddress = await addressService.updateAddress(
-      id,
+    const updatedAddress = await addressService.updateAddress({
+      addressId,
       userId,
-      addressData
-    );
+      addressLine1,
+      addressLine2,
+      city,
+      state,
+      postalCode,
+      country,
+      isDefault,
+    });
 
     res.json({
       success: true,
@@ -124,10 +135,13 @@ async function updateAddress(req, res, next) {
  */
 async function deleteAddress(req, res, next) {
   try {
-    const userId = req.user.id;
-    const { id } = req.params;
+    const { id: userId } = req.user;
+    const { id: addressId } = req.params;
 
-    const deletedAddress = await addressService.deleteAddress(id, userId);
+    const deletedAddress = await addressService.deleteAddress({
+      addressId,
+      userId,
+    });
 
     if (!deletedAddress) {
       return res.status(404).json({
@@ -152,10 +166,13 @@ async function deleteAddress(req, res, next) {
  */
 async function setDefaultAddress(req, res, next) {
   try {
-    const userId = req.user.id;
-    const { id } = req.params;
+    const { id: userId } = req.user;
+    const { id: addressId } = req.params;
 
-    const updatedAddress = await addressService.setDefaultAddress(id, userId);
+    const updatedAddress = await addressService.setDefaultAddress({
+      addressId,
+      userId,
+    });
 
     if (!updatedAddress) {
       return res.status(404).json({
