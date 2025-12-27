@@ -4,72 +4,59 @@ import { IconSparkles, IconArrowRight } from "@tabler/icons-react";
 
 const SuggesterCTA = () => {
   return (
-    <section className="max-w-7xl mx-auto px-6 py-16">
-      <div className="relative overflow-hidden bg-linear-to-br from-primary/10 via-primary/5 to-transparent rounded-2xl p-12 md:p-16 border border-primary/20">
-        {/* Decorative background elements */}
-        <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-0 left-0 w-48 h-48 bg-primary/5 rounded-full blur-3xl"></div>
+    <section className="w-full bg-gradient-to-br from-primary/5 via-primary/3 to-transparent py-20 md:py-24">
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="relative overflow-hidden bg-white rounded-3xl shadow-xl border border-gray-100">
+          {/* Subtle decorative elements */}
+          <div className="absolute top-0 right-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
+          <div className="absolute bottom-0 left-0 w-72 h-72 bg-primary/5 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2"></div>
 
-        <div className="relative grid md:grid-cols-2 gap-8 items-center">
-          {/* Left Content */}
-          <div className="space-y-4">
-            <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full">
-              <IconSparkles className="w-4 h-4 text-primary" />
-              <span className="text-sm text-primary font-medium">
-                Personalized
-              </span>
+          <div className="relative grid md:grid-cols-2 gap-12 items-center p-8 md:p-16">
+            {/* Left Content */}
+            <div className="space-y-6 text-center md:text-left">
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full">
+                <IconSparkles className="w-4 h-4 text-primary" />
+                <span className="text-sm text-primary font-semibold tracking-wide">
+                  AI-POWERED
+                </span>
+              </div>
+
+              <h2 className="text-4xl md:text-5xl font-bold text-gray-900 leading-tight">
+                Not Sure What to Read?
+              </h2>
+
+              <p className="text-gray-600 text-lg leading-relaxed max-w-md mx-auto md:mx-0">
+                Get personalized book recommendations tailored to your taste in
+                seconds
+              </p>
+
+              <Link
+                href="/suggester"
+                className="inline-flex items-center gap-2 px-8 py-4 bg-primary text-white font-semibold rounded-xl hover:bg-primary/90 transition-all hover:shadow-lg hover:shadow-primary/20 group"
+              >
+                Try Book Suggester
+                <IconArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </Link>
             </div>
-            <h2 className="text-3xl md:text-4xl font-heading text-text-primary leading-tight">
-              Not Sure What to Read?
-            </h2>
-            <p className="text-text-secondary text-lg">
-              Get instant recommendations based on your reading preferences and
-              history
-            </p>
-            <Link
-              href="/suggester"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-white font-medium rounded-lg hover:bg-primary-hover transition-all hover:shadow-lg group"
-            >
-              Try Book Suggester
-              <IconArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-            </Link>
-          </div>
 
-          {/* Right Visual */}
-          <div className="relative hidden md:block">
-            <div className="space-y-3">
-              {/* Book suggestion cards */}
-              <div className="bg-white/80 backdrop-blur-sm rounded-lg p-4 shadow-sm border border-gray-100 transform hover:scale-105 transition-transform">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-14 bg-gradient-to-br from-primary/30 to-primary/10 rounded"></div>
-                  <div className="flex-1 space-y-2">
-                    <div className="h-2 bg-gray-200 rounded-full w-3/4"></div>
-                    <div className="h-2 bg-gray-100 rounded-full w-1/2"></div>
+            {/* Right Visual - Simplified */}
+            <div className="relative hidden md:flex justify-center items-center">
+              <div className="relative w-64 h-64">
+                {/* Central sparkle icon */}
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center">
+                    <IconSparkles
+                      className="w-10 h-10 text-primary"
+                      strokeWidth={1.5}
+                    />
                   </div>
-                  <IconSparkles className="w-5 h-5 text-primary/40" />
                 </div>
-              </div>
 
-              <div className="bg-white/80 backdrop-blur-sm rounded-lg p-4 shadow-sm border border-gray-100 transform hover:scale-105 transition-transform ml-6">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-14 bg-gradient-to-br from-primary/40 to-primary/15 rounded"></div>
-                  <div className="flex-1 space-y-2">
-                    <div className="h-2 bg-gray-200 rounded-full w-2/3"></div>
-                    <div className="h-2 bg-gray-100 rounded-full w-3/4"></div>
-                  </div>
-                  <IconSparkles className="w-5 h-5 text-primary/40" />
-                </div>
-              </div>
-
-              <div className="bg-white/80 backdrop-blur-sm rounded-lg p-4 shadow-sm border border-gray-100 transform hover:scale-105 transition-transform mr-6">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-14 bg-gradient-to-br from-primary/25 to-primary/10 rounded"></div>
-                  <div className="flex-1 space-y-2">
-                    <div className="h-2 bg-gray-200 rounded-full w-4/5"></div>
-                    <div className="h-2 bg-gray-100 rounded-full w-1/2"></div>
-                  </div>
-                  <IconSparkles className="w-5 h-5 text-primary/40" />
-                </div>
+                {/* Orbiting book elements */}
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-12 h-16 bg-gradient-to-br from-primary/20 to-primary/10 rounded-md shadow-sm animate-pulse"></div>
+                <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-12 h-16 bg-gradient-to-br from-primary/15 to-primary/5 rounded-md shadow-sm animate-pulse delay-150"></div>
+                <div className="absolute left-0 top-1/2 -translate-y-1/2 w-12 h-16 bg-gradient-to-br from-primary/25 to-primary/10 rounded-md shadow-sm animate-pulse delay-300"></div>
+                <div className="absolute right-0 top-1/2 -translate-y-1/2 w-12 h-16 bg-gradient-to-br from-primary/20 to-primary/10 rounded-md shadow-sm animate-pulse delay-500"></div>
               </div>
             </div>
           </div>
