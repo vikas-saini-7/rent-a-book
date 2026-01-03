@@ -1,9 +1,11 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { ReactNode, useMemo } from "react";
 import { useLibraryAuth } from "@/contexts/LibraryAuthContext";
+import { IconBuilding } from "@tabler/icons-react";
 
 const navItems = [
   { label: "Overview", href: "/overview" },
@@ -72,12 +74,17 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
   return (
     <div className="min-h-screen lg:h-screen lg:overflow-hidden flex bg-bg-main text-text-primary">
       <aside className="hidden lg:flex lg:w-64 border-r border-border bg-bg-card p-6 flex-col gap-8 lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto">
-        <div className="flex items-center gap-3">
-          <div className="h-10 w-10 rounded-xl bg-linear-to-br from-primary to-accent-secondary text-white flex items-center justify-center font-semibold text-lg shadow-lg shadow-primary/20">
-            R
-          </div>
+        <div className="flex items-center gap-2">
+          <Image
+            src="/assets/logo.png"
+            alt="RentABook Logo"
+            width={60}
+            height={60}
+            className="object-contain"
+            unoptimized
+          />
           <div>
-            <p className="text-lg font-semibold text-text-primary">RentABook</p>
+            <p className="text-2xl font-semibold text-black">Rent<span className="text-text-muted">A</span>Book</p>
             <p className="text-xs text-text-muted font-medium">
               Library Console
             </p>
@@ -103,13 +110,13 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
           })}
         </nav>
 
-        <div className="mt-auto space-y-3 text-sm">
-          <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-linear-to-br from-bg-main to-gray-50 border border-border">
-            <div className="h-10 w-10 rounded-lg bg-linear-to-br from-primary/10 to-accent-secondary/10 text-primary border border-primary/20 flex items-center justify-center font-bold text-sm shadow-sm">
-              {libraryInitials}
+        <div className="mt-auto space-y-2 text-sm">
+          <div className="flex items-center gap-2 px-2 py-2 rounded-lg border border-border">
+            <div className="p-1.5 rounded bg-primary/5 shrink-0">
+              <IconBuilding className="w-4 h-4 text-primary" strokeWidth={2} />
             </div>
-            <div className="leading-tight overflow-hidden">
-              <p className="text-sm font-semibold text-text-primary truncate">
+            <div className="flex-1 leading-tight overflow-hidden min-w-0">
+              <p className="text-xs font-semibold text-text-primary truncate">
                 {library?.name}
               </p>
               <p className="text-xs text-text-muted truncate">

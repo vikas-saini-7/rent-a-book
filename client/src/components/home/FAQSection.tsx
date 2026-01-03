@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { IconChevronDown, IconHelpCircle } from "@tabler/icons-react";
+import { IconPlus, IconMinus } from "@tabler/icons-react";
 
 const faqs = [
   {
@@ -30,45 +30,35 @@ const FAQSection = () => {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   return (
-    <section className="max-w-4xl mx-auto px-6 py-16">
-      <div className="text-center mb-12">
-        <div className="inline-flex items-center justify-center w-16 h-16 bg-primary/10 rounded-full mb-4">
-          <IconHelpCircle className="w-8 h-8 text-primary" />
-        </div>
-        <h2 className="text-3xl md:text-4xl font-heading text-text-primary mb-3">
-          Frequently Asked Questions
-        </h2>
-        <p className="text-text-secondary">
-          Everything you need to know about renting books
-        </p>
-      </div>
+    <section className="max-w-3xl mx-auto px-6 py-20">
+      <h2 className="text-4xl md:text-5xl font-bold text-text-primary mb-12 text-center">
+        Have Questions? Get Answers.
+      </h2>
 
-      <div className="space-y-3">
+      <div className="space-y-4">
         {faqs.map((faq, index) => (
-          <div
-            key={index}
-            className="bg-bg-card border border-border rounded-xl overflow-hidden hover:border-primary/30 transition-all"
-          >
+          <div key={index} className="border-b border-border last:border-b-0">
             <button
               onClick={() => setOpenIndex(openIndex === index ? null : index)}
-              className="w-full px-6 py-5 flex justify-between items-center text-left"
+              className="w-full py-6 flex justify-between items-start text-left group"
             >
-              <span className="font-medium text-text-primary pr-4">
+              <span className="font-medium text-text-primary text-lg pr-8 group-hover:text-primary transition-colors">
                 {faq.question}
               </span>
-              <IconChevronDown
-                size={20}
-                className={`text-primary flex-shrink-0 transition-transform duration-300 ${
-                  openIndex === index ? "rotate-180" : ""
-                }`}
-              />
+              <div className="flex-shrink-0 w-6 h-6 flex items-center justify-center">
+                {openIndex === index ? (
+                  <IconMinus className="w-5 h-5 text-primary" />
+                ) : (
+                  <IconPlus className="w-5 h-5 text-text-muted" />
+                )}
+              </div>
             </button>
             <div
               className={`overflow-hidden transition-all duration-300 ${
-                openIndex === index ? "max-h-40" : "max-h-0"
+                openIndex === index ? "max-h-40 pb-6" : "max-h-0"
               }`}
             >
-              <p className="px-6 pb-5 text-text-secondary leading-relaxed">
+              <p className="text-text-secondary leading-relaxed pr-8">
                 {faq.answer}
               </p>
             </div>

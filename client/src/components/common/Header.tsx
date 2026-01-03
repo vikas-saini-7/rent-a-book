@@ -2,6 +2,7 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import {
   IconUser,
@@ -107,12 +108,18 @@ const Header = () => {
     <header className="w-full border-b border-border bg-bg-card">
       <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
         {/* Logo & Nav */}
-        <div className="flex items-center gap-10">
-          <Link
-            href="/"
-            className="text-2xl font-heading text-primary font-semibold"
-          >
-            RentABook
+        <div className="flex items-center gap-24">
+          <Link href="/" className="flex items-center gap-2">
+            <Image
+              src="/assets/logo.png"
+              alt="RentABook Logo"
+              width={50}
+              height={50}
+              className="object-contain"
+            />
+            <span className="text-2xl text-black font-semibold hidden sm:inline">
+              Rent<span className="text-primary">A</span>Book
+            </span>
           </Link>
           <nav className="hidden md:flex items-center gap-6">
             <Link

@@ -2,6 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 
 const HeroSection = () => {
   return (
@@ -13,8 +14,7 @@ const HeroSection = () => {
             Rent Books,
             <br />
             Save Money
-            <br />
-            & Read More
+            <br />& Read More
           </h1>
           <p className="text-lg text-text-secondary leading-relaxed">
             Discover thousands of books available for rent. Save money, save
@@ -32,42 +32,18 @@ const HeroSection = () => {
         <div className="relative">
           <div className="relative aspect-square max-w-md mx-auto">
             {/* Decorative gradient circle */}
-            <div className="absolute inset-0 bg-linear-to-br from-primary/20 via-primary/10 to-transparent rounded-full blur-3xl"></div>
+            <div className="absolute inset-0 from-primary/20 via-primary/10 to-transparent rounded-full blur-3xl"></div>
 
-            {/* Main content */}
+            {/* Hero Image */}
             <div className="relative h-full flex items-center justify-center">
-              <div className="space-y-6 w-full px-8">
-                {/* Minimalist book cards */}
-                <div className="bg-white/80 backdrop-blur-sm rounded-xl p-5 shadow-sm border border-gray-100 transition-transform hover:scale-105 hover:shadow-md">
-                  <div className="flex items-center gap-3">
-                    <div className="w-12 h-16 bg-linear-to-br from-primary/30 to-primary/10 rounded"></div>
-                    <div className="flex-1 space-y-2">
-                      <div className="h-2.5 bg-gray-200 rounded-full w-3/4"></div>
-                      <div className="h-2 bg-gray-100 rounded-full w-1/2"></div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="bg-white/80 backdrop-blur-sm rounded-xl p-5 shadow-sm border border-gray-100 transition-transform hover:scale-105 hover:shadow-md ml-8">
-                  <div className="flex items-center gap-3">
-                    <div className="w-12 h-16 bg-linear-to-br from-primary/40 to-primary/15 rounded"></div>
-                    <div className="flex-1 space-y-2">
-                      <div className="h-2.5 bg-gray-200 rounded-full w-2/3"></div>
-                      <div className="h-2 bg-gray-100 rounded-full w-3/4"></div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="bg-white/80 backdrop-blur-sm rounded-xl p-5 shadow-sm border border-gray-100 transition-transform hover:scale-105 hover:shadow-md mr-8">
-                  <div className="flex items-center gap-3">
-                    <div className="w-12 h-16 bg-linear-to-br from-primary/25 to-primary/10 rounded"></div>
-                    <div className="flex-1 space-y-2">
-                      <div className="h-2.5 bg-gray-200 rounded-full w-4/5"></div>
-                      <div className="h-2 bg-gray-100 rounded-full w-1/2"></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <Image
+                src="/assets/hero.png"
+                alt="Books Collection"
+                width={500}
+                height={500}
+                className="object-contain "
+                priority
+              />
             </div>
           </div>
         </div>

@@ -17,6 +17,11 @@ export const metadata: Metadata = {
   title: "Library Dashboard | RentABook",
   description:
     "Manage catalog, rentals, and operations for RentABook partner libraries.",
+  icons: {
+    icon: "/assets/logo.png",
+    shortcut: "/assets/logo.png",
+    apple: "/assets/logo.png",
+  },
 };
 
 export default function RootLayout({
