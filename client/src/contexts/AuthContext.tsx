@@ -30,11 +30,7 @@ axios.interceptors.response.use(
     const originalRequest = error.config;
 
     // If error is 401 and we haven't tried to refresh yet
-    if (
-      error.response?.status === 401 &&
-      error.response?.data?.message === "Access token expired" &&
-      !originalRequest._retry
-    ) {
+    if (error.response?.status === 401 && !originalRequest._retry) {
       if (isRefreshing) {
         // If already refreshing, queue this request
         return new Promise((resolve, reject) => {
@@ -56,17 +52,7 @@ axios.interceptors.response.use(
         const response = await axios.post(`${API_URL}/api/auth/refresh`);
 
         if (response.data.success) {
-          const { accessToken } = response.data.data;
-
-          // Update localStorage and axios defaults
-          if (accessToken) {
-            localStorage.setItem("accessToken", accessToken);
-            axios.defaults.headers.common[
-              "Authorization"
-            ] = `Bearer ${accessToken}`;
-          }
-
-          processQueue(null, accessToken);
+          processQueue(null, null);
           isRefreshing = false;
 
           // Retry the original request
@@ -75,11 +61,6 @@ axios.interceptors.response.use(
       } catch (refreshError) {
         processQueue(refreshError, null);
         isRefreshing = false;
-
-        // Refresh failed - clear auth state
-        sessionStorage.removeItem("user");
-        localStorage.removeItem("accessToken");
-        delete axios.defaults.headers.common["Authorization"];
 
         // Redirect to login
         if (typeof window !== "undefined") {
@@ -124,27 +105,19 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // Check authentication status on mount by trying to get user profile
-  // or checking if cookies exist (the backend will validate)
+  // Check authentication status on mount by calling /me endpoint
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        // Try to get profile or validate session with backend
-        const userData = sessionStorage.getItem("user");
-        const accessToken = localStorage.getItem("accessToken");
+        // Call /me endpoint to verify authentication via cookies
+        const response = await axios.get(`${API_URL}/api/auth/me`);
 
-        if (userData) {
-          setUser(JSON.parse(userData));
-        }
-
-        // Set axios header if token exists
-        if (accessToken) {
-          axios.defaults.headers.common[
-            "Authorization"
-          ] = `Bearer ${accessToken}`;
+        if (response.data.success) {
+          setUser(response.data.data.user);
         }
       } catch (error) {
-        console.error("Auth check failed:", error);
+        // Not authenticated or error - that's fine
+        console.log("Not authenticated");
       } finally {
         setLoading(false);
       }
@@ -161,18 +134,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
       if (response.data.success) {
         const userData = response.data.data.user;
-        const { accessToken } = response.data.data;
-
         setUser(userData);
-
-        // Store tokens
-        sessionStorage.setItem("user", JSON.stringify(userData));
-        if (accessToken) {
-          localStorage.setItem("accessToken", accessToken);
-          axios.defaults.headers.common[
-            "Authorization"
-          ] = `Bearer ${accessToken}`;
-        }
       }
     } catch (error: any) {
       const message = error.response?.data?.message || "Login failed";
@@ -190,18 +152,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
       if (response.data.success) {
         const userData = response.data.data.user;
-        const { accessToken } = response.data.data;
-
         setUser(userData);
-
-        // Store tokens
-        sessionStorage.setItem("user", JSON.stringify(userData));
-        if (accessToken) {
-          localStorage.setItem("accessToken", accessToken);
-          axios.defaults.headers.common[
-            "Authorization"
-          ] = `Bearer ${accessToken}`;
-        }
       }
     } catch (error: any) {
       const message = error.response?.data?.message || "Signup failed";
@@ -216,9 +167,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       console.error("Logout error:", error);
     } finally {
       setUser(null);
-      sessionStorage.removeItem("user");
-      localStorage.removeItem("accessToken");
-      delete axios.defaults.headers.common["Authorization"];
     }
   };
 

@@ -11,9 +11,10 @@ const cookieOptions = {
   secure: process.env.NODE_ENV === "production",
   maxAge: 24 * 60 * 60 * 1000, // 1 day
   path: "/",
-  ...(process.env.NODE_ENV === "production" && process.env.COOKIE_DOMAIN && {
-    domain: process.env.COOKIE_DOMAIN,
-  }),
+  ...(process.env.NODE_ENV === "production" &&
+    process.env.COOKIE_DOMAIN && {
+      domain: process.env.COOKIE_DOMAIN,
+    }),
 };
 
 exports.register = async (req, res, next) => {
@@ -57,7 +58,7 @@ exports.register = async (req, res, next) => {
   res.status(201).json({
     success: true,
     message: "Library registration successful",
-    data: { library: safeLibrary, accessToken, refreshToken },
+    data: { library: safeLibrary },
   });
 };
 
@@ -77,7 +78,7 @@ exports.login = async (req, res, next) => {
   res.status(200).json({
     success: true,
     message: "Library login successful",
-    data: { library: safeLibrary, accessToken, refreshToken },
+    data: { library: safeLibrary },
   });
 };
 
@@ -92,7 +93,6 @@ exports.refresh = async (req, res, next) => {
   res.status(200).json({
     success: true,
     message: "Token refreshed successfully",
-    data: { accessToken, refreshToken },
   });
 };
 
@@ -107,5 +107,35 @@ exports.logout = async (req, res, next) => {
   res.status(200).json({
     success: true,
     message: "Logout successful",
+  });
+};
+
+/**
+ * Get current authenticated library
+ */
+exports.me = async (req, res, next) => {
+  // Library is attached by authenticateLibrary middleware
+  const libraryId = req.library.id;
+
+  // Get full library data from database
+  const { db } = require("../db/index.js");
+  const { libraries } = require("../db/schema.js");
+  const { eq } = require("drizzle-orm");
+
+  const [library] = await db
+    .select()
+    .from(libraries)
+    .where(eq(libraries.id, libraryId));
+
+  if (!library) {
+    const { AppError } = require("../middlewares/error.middleware.js");
+    throw new AppError("Library not found", 404);
+  }
+
+  const { password: _, ...safeLibrary } = library;
+
+  res.status(200).json({
+    success: true,
+    data: { library: safeLibrary },
   });
 };

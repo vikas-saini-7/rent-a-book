@@ -74,12 +74,15 @@ export const LibraryAuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const checkAuth = async () => {
     try {
-      const storedLibrary = localStorage.getItem("library");
-      if (storedLibrary) {
-        setLibrary(JSON.parse(storedLibrary));
+      // Call /me endpoint to verify authentication via cookies
+      const response = await axios.get(`${API_URL}/api/library/auth/me`);
+
+      if (response.data.success) {
+        setLibrary(response.data.data.library);
       }
     } catch (error) {
-      console.error("Error checking auth:", error);
+      // Not authenticated or error - that's fine
+      console.log("Not authenticated");
     } finally {
       setLoading(false);
     }
@@ -87,13 +90,12 @@ export const LibraryAuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const login = async (email: string, password: string) => {
     try {
-      const { data } = await axios.post(
-        `${API_URL}/api/library/auth/login`,
-        { email, password }
-      );
+      const { data } = await axios.post(`${API_URL}/api/library/auth/login`, {
+        email,
+        password,
+      });
 
       setLibrary(data.data.library);
-      localStorage.setItem("library", JSON.stringify(data.data.library));
     } catch (error: any) {
       throw new Error(error.response?.data?.message || "Login failed");
     }
@@ -107,7 +109,6 @@ export const LibraryAuthProvider: React.FC<{ children: React.ReactNode }> = ({
       );
 
       setLibrary(data.data.library);
-      localStorage.setItem("library", JSON.stringify(data.data.library));
     } catch (error: any) {
       throw new Error(error.response?.data?.message || "Registration failed");
     }
@@ -115,15 +116,11 @@ export const LibraryAuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const logout = async () => {
     try {
-      await axios.post(
-        `${API_URL}/api/library/auth/logout`,
-        {}
-      );
+      await axios.post(`${API_URL}/api/library/auth/logout`, {});
     } catch (error) {
       console.error("Logout error:", error);
     } finally {
       setLibrary(null);
-      localStorage.removeItem("library");
     }
   };
 

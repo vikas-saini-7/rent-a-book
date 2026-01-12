@@ -3,21 +3,22 @@ const { AppError } = require("./error.middleware.js");
 
 /**
  * Authentication middleware to verify JWT token and attach user to request
- * Checks both Authorization header (Bearer token) and cookies
+ * Checks cookies first, then falls back to Authorization header
  */
 const authenticate = (req, res, next) => {
   try {
-    // Try to get token from Authorization header first
-    const authHeader = req.headers.authorization;
     let token = null;
 
-    if (authHeader && authHeader.startsWith("Bearer ")) {
-      token = authHeader.substring(7);
-    }
-
-    // If not in header, try cookies
-    if (!token && req.cookies.accessToken) {
+    // Prioritize cookie-based authentication
+    if (req.cookies.accessToken) {
       token = req.cookies.accessToken;
+    }
+    // Fallback to Authorization header for backward compatibility
+    else if (
+      req.headers.authorization &&
+      req.headers.authorization.startsWith("Bearer ")
+    ) {
+      token = req.headers.authorization.substring(7);
     }
 
     // If no token found
@@ -48,17 +49,18 @@ const authenticate = (req, res, next) => {
  */
 const optionalAuthenticate = (req, res, next) => {
   try {
-    // Try to get token from Authorization header first
-    const authHeader = req.headers.authorization;
     let token = null;
 
-    if (authHeader && authHeader.startsWith("Bearer ")) {
-      token = authHeader.substring(7);
-    }
-
-    // If not in header, try cookies
-    if (!token && req.cookies.accessToken) {
+    // Prioritize cookie-based authentication
+    if (req.cookies.accessToken) {
       token = req.cookies.accessToken;
+    }
+    // Fallback to Authorization header
+    else if (
+      req.headers.authorization &&
+      req.headers.authorization.startsWith("Bearer ")
+    ) {
+      token = req.headers.authorization.substring(7);
     }
 
     // If token exists, verify and attach user
@@ -80,17 +82,18 @@ const optionalAuthenticate = (req, res, next) => {
 
 const authenticateLibrary = (req, res, next) => {
   try {
-    // Try to get token from Authorization header first
-    const authHeader = req.headers.authorization;
     let token = null;
 
-    if (authHeader && authHeader.startsWith("Bearer ")) {
-      token = authHeader.substring(7);
-    }
-
-    // If not in header, try cookies
-    if (!token && req.cookies.libraryAccessToken) {
+    // Prioritize cookie-based authentication
+    if (req.cookies.libraryAccessToken) {
       token = req.cookies.libraryAccessToken;
+    }
+    // Fallback to Authorization header
+    else if (
+      req.headers.authorization &&
+      req.headers.authorization.startsWith("Bearer ")
+    ) {
+      token = req.headers.authorization.substring(7);
     }
 
     // If no token found

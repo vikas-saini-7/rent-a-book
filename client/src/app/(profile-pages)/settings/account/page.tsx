@@ -30,17 +30,8 @@ export default function AccountPage() {
       setSaving(true);
       await updateProfile(formData);
 
-      // Update user data in sessionStorage
-      if (user) {
-        const updatedUser = {
-          ...user,
-          fullName: formData.fullName,
-          phone: formData.phone,
-        };
-        sessionStorage.setItem("user", JSON.stringify(updatedUser));
-        // Force re-render by updating the page
-        window.location.reload();
-      }
+      // Reload page to refresh user data from /me endpoint
+      window.location.reload();
 
       alert("Profile updated successfully!");
     } catch (error: any) {

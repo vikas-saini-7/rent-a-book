@@ -35,36 +35,20 @@ export interface CreateAddressDto {
 export interface UpdateAddressDto extends Partial<CreateAddressDto> {}
 
 class AddressService {
-  private getAuthHeaders() {
-    const token = localStorage.getItem("token");
-    return {
-      headers: {
-        ...(token && { Authorization: `Bearer ${token}` }),
-      },
-    };
-  }
-
   async getAllAddresses(): Promise<Address[]> {
-    const response = await axios.get(
-      `${API_URL}/api/addresses`,
-      this.getAuthHeaders()
-    );
+    const response = await axios.get(`${API_URL}/api/addresses`);
     return response.data.data;
   }
 
   async getAddress(id: string): Promise<Address> {
-    const response = await axios.get(
-      `${API_URL}/api/addresses/${id}`,
-      this.getAuthHeaders()
-    );
+    const response = await axios.get(`${API_URL}/api/addresses/${id}`);
     return response.data.data;
   }
 
   async createAddress(addressData: CreateAddressDto): Promise<Address> {
     const response = await axios.post(
       `${API_URL}/api/addresses`,
-      addressData,
-      this.getAuthHeaders()
+      addressData
     );
     return response.data.data;
   }
@@ -75,21 +59,19 @@ class AddressService {
   ): Promise<Address> {
     const response = await axios.put(
       `${API_URL}/api/addresses/${id}`,
-      addressData,
-      this.getAuthHeaders()
+      addressData
     );
     return response.data.data;
   }
 
   async deleteAddress(id: string): Promise<void> {
-    await axios.delete(`${API_URL}/api/addresses/${id}`, this.getAuthHeaders());
+    await axios.delete(`${API_URL}/api/addresses/${id}`);
   }
 
   async setDefaultAddress(id: string): Promise<Address> {
     const response = await axios.patch(
       `${API_URL}/api/addresses/${id}/default`,
-      {},
-      this.getAuthHeaders()
+      {}
     );
     return response.data.data;
   }

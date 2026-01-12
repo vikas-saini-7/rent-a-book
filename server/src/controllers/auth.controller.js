@@ -11,9 +11,10 @@ const cookieOptions = {
   secure: process.env.NODE_ENV === "production",
   maxAge: 24 * 60 * 60 * 1000, // 1 day
   path: "/",
-  ...(process.env.NODE_ENV === "production" && process.env.COOKIE_DOMAIN && {
-    domain: process.env.COOKIE_DOMAIN,
-  }),
+  ...(process.env.NODE_ENV === "production" &&
+    process.env.COOKIE_DOMAIN && {
+      domain: process.env.COOKIE_DOMAIN,
+    }),
 };
 
 /**
@@ -36,7 +37,7 @@ exports.register = async (req, res, next) => {
   res.status(201).json({
     success: true,
     message: "Registration successful",
-    data: { user: safeUser, accessToken, refreshToken },
+    data: { user: safeUser },
   });
 };
 
@@ -59,7 +60,7 @@ exports.login = async (req, res, next) => {
   res.status(200).json({
     success: true,
     message: "Login successful",
-    data: { user: safeUser, accessToken, refreshToken },
+    data: { user: safeUser },
   });
 };
 
@@ -78,7 +79,6 @@ exports.refresh = async (req, res, next) => {
   res.status(200).json({
     success: true,
     message: "Token refreshed successfully",
-    data: { accessToken: newAccessToken },
   });
 };
 
@@ -94,5 +94,32 @@ exports.logout = async (req, res, next) => {
   res.status(200).json({
     success: true,
     message: "Logout successful",
+  });
+};
+
+/**
+ * Get current authenticated user
+ */
+exports.me = async (req, res, next) => {
+  // User is attached by authenticate middleware
+  const userId = req.user.id;
+
+  // Get full user data from database
+  const { db } = require("../db/index.js");
+  const { users } = require("../db/schema.js");
+  const { eq } = require("drizzle-orm");
+
+  const [user] = await db.select().from(users).where(eq(users.id, userId));
+
+  if (!user) {
+    const { AppError } = require("../middlewares/error.middleware.js");
+    throw new AppError("User not found", 404);
+  }
+
+  const { password: _, ...safeUser } = user;
+
+  res.status(200).json({
+    success: true,
+    data: { user: safeUser },
   });
 };
