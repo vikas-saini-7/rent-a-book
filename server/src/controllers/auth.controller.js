@@ -5,16 +5,23 @@ const {
   logoutUser,
 } = require("../services/auth.service.js");
 
+// const cookieOptions = {
+//   httpOnly: true,
+//   sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
+//   secure: process.env.NODE_ENV === "production",
+//   maxAge: 24 * 60 * 60 * 1000, // 1 day
+//   path: "/",
+//   ...(process.env.NODE_ENV === "production" &&
+//     process.env.COOKIE_DOMAIN && {
+//       domain: process.env.COOKIE_DOMAIN,
+//     }),
+// };
+
 const cookieOptions = {
   httpOnly: true,
   sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
   secure: process.env.NODE_ENV === "production",
   maxAge: 24 * 60 * 60 * 1000, // 1 day
-  path: "/",
-  ...(process.env.NODE_ENV === "production" &&
-    process.env.COOKIE_DOMAIN && {
-      domain: process.env.COOKIE_DOMAIN,
-    }),
 };
 
 /**
