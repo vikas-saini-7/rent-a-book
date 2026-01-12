@@ -281,9 +281,6 @@ function CartPageContent() {
     </div>
   );
 }
-    </div>
-  );
-}
 
 export default function CartPage() {
   return (
