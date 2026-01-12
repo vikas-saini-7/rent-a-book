@@ -3,6 +3,11 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import axios from "axios";
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+
+// Configure axios to always send cookies
+axios.defaults.withCredentials = true;
+
 interface Library {
   id: string;
   name: string;
@@ -83,9 +88,8 @@ export const LibraryAuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const login = async (email: string, password: string) => {
     try {
       const { data } = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/library/auth/login`,
-        { email, password },
-        { withCredentials: true }
+        `${API_URL}/api/library/auth/login`,
+        { email, password }
       );
 
       setLibrary(data.data.library);
@@ -98,9 +102,8 @@ export const LibraryAuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const register = async (registerData: RegisterData) => {
     try {
       const { data } = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/library/auth/register`,
-        registerData,
-        { withCredentials: true }
+        `${API_URL}/api/library/auth/register`,
+        registerData
       );
 
       setLibrary(data.data.library);
@@ -113,9 +116,8 @@ export const LibraryAuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const logout = async () => {
     try {
       await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/library/auth/logout`,
-        {},
-        { withCredentials: true }
+        `${API_URL}/api/library/auth/logout`,
+        {}
       );
     } catch (error) {
       console.error("Logout error:", error);
