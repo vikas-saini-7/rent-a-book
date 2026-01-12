@@ -1,6 +1,4 @@
-import axios from "axios";
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+import axiosInstance from "@/lib/axios";
 
 export interface Address {
   id: string;
@@ -36,17 +34,17 @@ export interface UpdateAddressDto extends Partial<CreateAddressDto> {}
 
 class AddressService {
   async getAllAddresses(): Promise<Address[]> {
-    const response = await axios.get(`${API_URL}/api/addresses`);
+    const response = await axiosInstance.get("/api/addresses");
     return response.data.data;
   }
 
   async getAddress(id: string): Promise<Address> {
-    const response = await axios.get(`${API_URL}/api/addresses/${id}`);
+    const response = await axiosInstance.get(`/api/addresses/${id}`);
     return response.data.data;
   }
 
   async createAddress(addressData: CreateAddressDto): Promise<Address> {
-    const response = await axios.post(`${API_URL}/api/addresses`, addressData);
+    const response = await axiosInstance.post("/api/addresses", addressData);
     return response.data.data;
   }
 
@@ -54,20 +52,20 @@ class AddressService {
     id: string,
     addressData: UpdateAddressDto
   ): Promise<Address> {
-    const response = await axios.put(
-      `${API_URL}/api/addresses/${id}`,
+    const response = await axiosInstance.put(
+      `/api/addresses/${id}`,
       addressData
     );
     return response.data.data;
   }
 
   async deleteAddress(id: string): Promise<void> {
-    await axios.delete(`${API_URL}/api/addresses/${id}`);
+    await axiosInstance.delete(`/api/addresses/${id}`);
   }
 
   async setDefaultAddress(id: string): Promise<Address> {
-    const response = await axios.patch(
-      `${API_URL}/api/addresses/${id}/default`,
+    const response = await axiosInstance.patch(
+      `/api/addresses/${id}/default`,
       {}
     );
     return response.data.data;

@@ -1,84 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect } from "react";
-import axios from "axios";
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
-
-// Configure axios to always send cookies
-axios.defaults.withCredentials = true;
-
-// Flag to prevent multiple refresh requests
-let isRefreshing = false;
-let failedQueue: any[] = [];
-
-const processQueue = (error: any, token: string | null = null) => {
-  failedQueue.forEach((prom) => {
-    if (error) {
-      prom.reject(error);
-    } else {
-      prom.resolve(token);
-    }
-  });
-  failedQueue = [];
-};
-
-// Setup axios interceptor for token refresh
-axios.interceptors.response.use(
-  (response) => response,
-  async (error) => {
-    const originalRequest = error.config;
-
-    // Don't try to refresh if:
-    // 1. Already retried
-    // 2. The request itself is a refresh request
-    // 3. The request is the /me endpoint (initial auth check)
-    // 4. Not a 401 error
-    if (
-      error.response?.status === 401 &&
-      !originalRequest._retry &&
-      !originalRequest.url?.includes("/auth/refresh") &&
-      !originalRequest.url?.includes("/auth/me")
-    ) {
-      if (isRefreshing) {
-        // If already refreshing, queue this request
-        return new Promise((resolve, reject) => {
-          failedQueue.push({ resolve, reject });
-        })
-          .then(() => {
-            return axios(originalRequest);
-          })
-          .catch((err) => {
-            return Promise.reject(err);
-          });
-      }
-
-      originalRequest._retry = true;
-      isRefreshing = true;
-
-      try {
-        // Try to refresh the token
-        const response = await axios.post(`${API_URL}/api/auth/refresh`);
-
-        if (response.data.success) {
-          processQueue(null, null);
-          isRefreshing = false;
-
-          // Retry the original request
-          return axios(originalRequest);
-        }
-      } catch (refreshError) {
-        processQueue(refreshError, null);
-        isRefreshing = false;
-
-        // Don't redirect here - let the component handle it
-        return Promise.reject(refreshError);
-      }
-    }
-
-    return Promise.reject(error);
-  }
-);
+import axiosInstance from "@/lib/axios";
 
 interface User {
   id: string;
@@ -124,7 +47,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         }
 
         // Call /me endpoint to verify authentication via cookies
-        const response = await axios.get(`${API_URL}/api/auth/me`);
+        const response = await axiosInstance.get("/api/auth/me");
 
         if (response.data.success) {
           setUser(response.data.data.user);
@@ -141,7 +64,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const login = async (email: string, password: string) => {
     try {
-      const response = await axios.post(`${API_URL}/api/auth/login`, {
+      const response = await axiosInstance.post("/api/auth/login", {
         email,
         password,
       });
@@ -158,7 +81,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const signup = async (name: string, email: string, password: string) => {
     try {
-      const response = await axios.post(`${API_URL}/api/auth/register`, {
+      const response = await axiosInstance.post("/api/auth/register", {
         name,
         email,
         password,
@@ -176,7 +99,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const logout = async () => {
     try {
-      await axios.post(`${API_URL}/api/auth/logout`);
+      await axiosInstance.post("/api/auth/logout");
     } catch (error) {
       console.error("Logout error:", error);
     } finally {

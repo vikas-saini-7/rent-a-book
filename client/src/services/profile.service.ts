@@ -1,6 +1,4 @@
-import axios from "axios";
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+import axiosInstance from "@/lib/axios";
 
 export interface Profile {
   id: string;
@@ -32,7 +30,7 @@ export interface WalletBalance {
  * Get current user's profile
  */
 export const getProfile = async (): Promise<Profile> => {
-  const response = await axios.get(`${API_URL}/api/profile`);
+  const response = await axiosInstance.get("/api/profile");
   return response.data.data;
 };
 
@@ -42,7 +40,7 @@ export const getProfile = async (): Promise<Profile> => {
 export const updateProfile = async (
   data: UpdateProfileData
 ): Promise<Profile> => {
-  const response = await axios.put(`${API_URL}/api/profile`, data);
+  const response = await axiosInstance.put("/api/profile", data);
   return response.data.data;
 };
 
@@ -50,7 +48,7 @@ export const updateProfile = async (
  * Get current user's wallet balance
  */
 export const getWalletBalance = async (): Promise<WalletBalance> => {
-  const response = await axios.get(`${API_URL}/api/profile/wallet`);
+  const response = await axiosInstance.get("/api/profile/wallet");
   return response.data.data;
 };
 
@@ -58,5 +56,5 @@ export const getWalletBalance = async (): Promise<WalletBalance> => {
  * Delete current user's account
  */
 export const deleteAccount = async (): Promise<void> => {
-  await axios.delete(`${API_URL}/api/profile`);
+  await axiosInstance.delete("/api/profile");
 };
