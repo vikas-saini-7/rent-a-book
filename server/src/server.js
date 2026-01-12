@@ -12,6 +12,12 @@ const { errorHandler, notFound } = require("./middlewares/error.middleware.js");
 
 const app = express();
 
+// Trust proxy - CRITICAL for cookies to work in production behind reverse proxy
+// This allows Express to read the X-Forwarded-* headers set by proxies/load balancers
+if (process.env.NODE_ENV === "production") {
+  app.set("trust proxy", 1);
+}
+
 app.use(morgan("dev"));
 
 // Allowed origins from environment variables
