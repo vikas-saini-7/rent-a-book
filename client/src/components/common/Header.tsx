@@ -99,9 +99,8 @@ const Header = () => {
   };
 
   const handleLogout = async () => {
-    await logout();
     setIsProfileOpen(false);
-    router.push("/");
+    await logout();
   };
 
   return (

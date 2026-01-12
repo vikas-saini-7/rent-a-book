@@ -20,6 +20,8 @@ const allowedOrigins = [
   process.env.LIBRARY_DASHBOARD_URL || "http://localhost:3001",
 ];
 
+console.log("🔒 Allowed CORS Origins:", allowedOrigins);
+
 // Middleware
 app.use(
   cors({
@@ -30,7 +32,9 @@ app.use(
       if (allowedOrigins.indexOf(origin) !== -1) {
         callback(null, true);
       } else {
-        callback(new Error("Not allowed by CORS"));
+        console.error(`❌ CORS Error: Origin "${origin}" is not allowed`);
+        console.error(`✅ Allowed origins:`, allowedOrigins);
+        callback(new Error(`Not allowed by CORS. Origin: ${origin}`));
       }
     },
     credentials: true,

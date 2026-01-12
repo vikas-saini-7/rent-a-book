@@ -29,8 +29,17 @@ axios.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
-    // If error is 401 and we haven't tried to refresh yet
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    // Don't try to refresh if:
+    // 1. Already retried
+    // 2. The request itself is a refresh request
+    // 3. The request is the /me endpoint (initial auth check)
+    // 4. Not a 401 error
+    if (
+      error.response?.status === 401 &&
+      !originalRequest._retry &&
+      !originalRequest.url?.includes("/auth/refresh") &&
+      !originalRequest.url?.includes("/auth/me")
+    ) {
       if (isRefreshing) {
         // If already refreshing, queue this request
         return new Promise((resolve, reject) => {
@@ -62,11 +71,7 @@ axios.interceptors.response.use(
         processQueue(refreshError, null);
         isRefreshing = false;
 
-        // Redirect to login
-        if (typeof window !== "undefined") {
-          window.location.href = "/login";
-        }
-
+        // Don't redirect here - let the component handle it
         return Promise.reject(refreshError);
       }
     }
@@ -109,6 +114,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
+        // Skip auth check on login/signup pages to avoid unnecessary API calls
+        if (typeof window !== "undefined") {
+          const pathname = window.location.pathname;
+          if (pathname === "/login" || pathname === "/signup") {
+            setLoading(false);
+            return;
+          }
+        }
+
         // Call /me endpoint to verify authentication via cookies
         const response = await axios.get(`${API_URL}/api/auth/me`);
 
@@ -167,6 +181,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       console.error("Logout error:", error);
     } finally {
       setUser(null);
+      // Redirect to home after logout
+      if (typeof window !== "undefined") {
+        window.location.href = "/";
+      }
     }
   };
 
