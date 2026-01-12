@@ -6,6 +6,7 @@ import { useCart } from "@/contexts/CartContext";
 import { useAuth } from "@/contexts/AuthContext";
 import Header from "@/components/common/Header";
 import Footer from "@/components/common/Footer";
+import ProtectedRoute from "@/components/common/ProtectedRoute";
 import {
   IconTrash,
   IconShoppingCart,
@@ -13,7 +14,7 @@ import {
   IconAlertCircle,
 } from "@tabler/icons-react";
 
-export default function CartPage() {
+function CartPageContent() {
   const router = useRouter();
   const {
     cart,
@@ -23,7 +24,7 @@ export default function CartPage() {
     getTotalDeposit,
     clearCart,
   } = useCart();
-  const { user, isAuthenticated } = useAuth();
+  const { user } = useAuth();
 
   const totalRental = getTotalRental();
   const totalDeposit = getTotalDeposit();
@@ -42,35 +43,6 @@ export default function CartPage() {
   const availableDeposit = Math.max(0, depositBalance - lockedBalance);
   const hasEnoughDeposit = availableDeposit >= totalDeposit;
   const depositShortfall = Math.max(0, totalDeposit - availableDeposit);
-
-  if (!isAuthenticated) {
-    return (
-      <div className="min-h-screen flex flex-col">
-        <Header />
-        <main className="flex-1 max-w-7xl mx-auto px-6 py-16 w-full flex items-center justify-center">
-          <div className="text-center">
-            <IconShoppingCart
-              size={64}
-              className="mx-auto text-text-muted mb-4"
-            />
-            <h1 className="text-2xl font-heading text-text-primary mb-2">
-              Sign in to view your cart
-            </h1>
-            <p className="text-text-secondary mb-6">
-              Please login to add books to your cart and rent them.
-            </p>
-            <button
-              onClick={() => router.push("/login")}
-              className="px-6 py-3 bg-primary hover:bg-primary-hover text-white rounded-lg font-semibold transition-colors"
-            >
-              Login
-            </button>
-          </div>
-        </main>
-        <Footer />
-      </div>
-    );
-  }
 
   if (cart.length === 0) {
     return (
@@ -307,5 +279,16 @@ export default function CartPage() {
 
       <Footer />
     </div>
+  );
+}
+    </div>
+  );
+}
+
+export default function CartPage() {
+  return (
+    <ProtectedRoute>
+      <CartPageContent />
+    </ProtectedRoute>
   );
 }
