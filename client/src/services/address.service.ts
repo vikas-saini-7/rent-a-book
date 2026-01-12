@@ -46,10 +46,7 @@ class AddressService {
   }
 
   async createAddress(addressData: CreateAddressDto): Promise<Address> {
-    const response = await axios.post(
-      `${API_URL}/api/addresses`,
-      addressData
-    );
+    const response = await axios.post(`${API_URL}/api/addresses`, addressData);
     return response.data.data;
   }
 
